@@ -9,9 +9,11 @@
 
 
 %x COMMENT
+%x STRING
 
 %%
 [0-9]+										{return LIT_INTEGER;}
+[0-9]+"."[0-9]+								{return LIT_FLOAT;}
 "char" 										{return KW_CHAR;}
 "int" 										{return KW_INT;}
 "float" 									{return KW_FLOAT;}
@@ -28,10 +30,15 @@
 "not"										{return OPERATOR_NOT;}
 "and"										{return OPERATOR_AND;}
 "or"										{return OPERATOR_OR;}
+\"(\\.|[^"])*\"								{return LIT_STRING;}
+
 [,|;|:|d|b|q|p|{|}|+|-|*|/|<|>|=|!|&|$|#] 	{return yytext[0];}
-[_a-ce-or-z0-9]*[_a-ce-or-z]				{return TK_IDENTIFIER;}
+[_a-ce-or-z0-9A-Z]*[_a-ce-or-zA-Z]				{return TK_IDENTIFIER;}
 "\n"										{++lineNumber;}
 " "
+"//".*
+
+
 "/*"  										{BEGIN(COMMENT);}
 <COMMENT>"*/" 								{BEGIN(INITIAL);}
 <COMMENT>"\n" 								{++lineNumber;}
@@ -39,7 +46,11 @@
 .											{return TOKEN_ERROR;}
 
 %%
-
+// ["]  										{BEGIN(STRING);}
+// <STRING>""" 								{BEGIN(INITIAL); return LIT_STRING;}
+// <STRING>"\"". 
+// <STRING>. 
+//["][^"]*["]									{return LIT_STRING;}
 void initMe(void){
 
 }
