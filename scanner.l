@@ -1,6 +1,7 @@
 %{
 	#include "util.h"
 	#include "tokens.h"
+	#include "hash.h"
 	int lineNumber = 1;
 	int running = TRUE;
 %}
@@ -33,7 +34,7 @@
 \"(\\.|[^"])*\"								{return LIT_STRING;}
 
 [,|;|:|d|b|q|p|{|}|+|-|*|/|<|>|=|!|&|$|#] 	{return yytext[0];}
-[_a-ce-or-z0-9A-Z]*[_a-ce-or-zA-Z]				{return TK_IDENTIFIER;}
+[_a-ce-or-z0-9A-Z]*[_a-ce-or-zA-Z]			{return TK_IDENTIFIER;}
 "\n"										{++lineNumber;}
 " "
 "//".*
@@ -46,13 +47,12 @@
 .											{return TOKEN_ERROR;}
 
 %%
-// ["]  										{BEGIN(STRING);}
-// <STRING>""" 								{BEGIN(INITIAL); return LIT_STRING;}
-// <STRING>"\"". 
-// <STRING>. 
-//["][^"]*["]									{return LIT_STRING;}
-void initMe(void){
 
+HASH_TABLE *hashTable;
+int hashTableSize = 30;
+
+void initMe(void){
+	hashTable = createHashTable(hashTableSize);
 }
 
 int isRunning(void){
@@ -68,4 +68,3 @@ int yywrap(void){
 	running = FALSE;
 	return 1;
 }
-
