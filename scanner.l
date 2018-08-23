@@ -4,17 +4,17 @@
 	#include "hash.h"
 	int lineNumber = 1;
 	int running = TRUE;
+	HASH_TABLE *hashTable;
 %}
 
 
 
 
 %x COMMENT
-%x STRING
 
 %%
-[0-9]+										{return LIT_INTEGER;}
-[0-9]+"."[0-9]+								{return LIT_FLOAT;}
+[0-9]+										{pushItem(hashTable,yytext,yytext); return LIT_INTEGER;}
+[0-9]+"."[0-9]+								{pushItem(hashTable,yytext,yytext); return LIT_FLOAT;}
 "char" 										{return KW_CHAR;}
 "int" 										{return KW_INT;}
 "float" 									{return KW_FLOAT;}
@@ -26,17 +26,17 @@
 "return"									{return KW_RETURN;}
 "print"										{return KW_PRINT;}
 "<="										{return OPERATOR_LE;}
-"=>"										{return OPERATOR_GE;}
+">="										{return OPERATOR_GE;}
 "=="										{return OPERATOR_EQ;}
 "not"										{return OPERATOR_NOT;}
 "and"										{return OPERATOR_AND;}
 "or"										{return OPERATOR_OR;}
-\"(\\.|[^"])*\"								{return LIT_STRING;}
-
-[,|;|:|d|b|q|p|{|}|+|-|*|/|<|>|=|!|&|$|#] 	{return yytext[0];}
-[_a-ce-or-z0-9A-Z]*[_a-ce-or-zA-Z]			{return TK_IDENTIFIER;}
+\"(\\.|[^"])*\"								{pushItem(hashTable,yytext,yytext); return LIT_STRING;}
+['][-a-zA-Z0-9][']                  	    {pushItem(hashTable,yytext,yytext);  return LIT_CHAR;}
+[-|,|;|:|d|b|q|p|{|}|+|*|/|<|>|=|!|&|$|#] 	{return yytext[0];}
+[_ace-or-z0-9A-Z]*[_ace-or-zA-Z][_ace-or-z0-9A-Z]*	{pushItem(hashTable,yytext,yytext); return TK_IDENTIFIER;}
 "\n"										{++lineNumber;}
-" "
+[ /t]
 "//".*
 
 
@@ -48,8 +48,7 @@
 
 %%
 
-HASH_TABLE *hashTable;
-int hashTableSize = 30;
+int hashTableSize = 997;
 
 void initMe(void){
 	hashTable = createHashTable(hashTableSize);

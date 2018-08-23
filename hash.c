@@ -61,15 +61,15 @@ void pushItem(HASH_TABLE* hashTable, char* key, char* value) {
 }
 
 int generateIndex(char* key, int size) {
-    int hashval = 5381;
+    int hashval = 1;
 	int i = 0;
 
 	// Convert our string to an integer
 	while(hashval < 2147483647 && i < strlen(key)) {
-		hashval = ((hashval << 5) + hashval) + key[i];
+		hashval += key[i];
 		i++;
 	}
-
+    
     return hashval % size;
 }
 
@@ -114,23 +114,3 @@ void printHashTable(HASH_TABLE* hashTable) {
         }
     }
 }
-
-// just for test
-/*
-int main( int argc, char **argv ) {
-
-	HASH_TABLE *hashtable = createHashTable(3);
-	pushItem( hashtable, "k1", "charlie" );
-	pushItem( hashtable, "k2", "pinky" );
-	pushItem( hashtable, "k3", "blinky" );
-	pushItem( hashtable, "k6", "katy perry");
-	pushItem( hashtable, "k4", "floyd" );
-	pushItem( hashtable, "k5", "maroon5" );
-	pushItem( hashtable, "k1", "coldplay" );
-	pushItem( hashtable, "k5", "rihanna");
-
-    printHashTable(hashtable);
-
-	return 0;
-}
-*/

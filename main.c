@@ -9,7 +9,7 @@ int main( int argc, char **argv)
             yyin = fopen( argv[0], "r" );
     else
             yyin = stdin;
-        
+	initMe();
     int line = getLineNumber();
 	while(isRunning()){
     	int token = yylex();
