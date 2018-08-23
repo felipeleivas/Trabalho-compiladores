@@ -1,10 +1,13 @@
 %{
 	#include "util.h"
-	#include "tokens.h"
-	#include "hash.h"
+	#include "y.tab.h"
 	int lineNumber = 1;
 	int running = TRUE;
 	HASH_TABLE *hashTable;
+	int getLineNumber(void){
+		return lineNumber;
+	}
+	#include "hash.h"
 %}
 
 
@@ -58,9 +61,6 @@ int isRunning(void){
 	return running;
 }
 
-int getLineNumber(void){
-	return lineNumber;
-}
 
 
 int yywrap(void){
