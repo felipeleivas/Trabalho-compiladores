@@ -39,7 +39,7 @@
 [-|,|;|:|d|b|q|p|{|}|+|*|/|<|>|=|!|&|$|#] 	{return yytext[0];}
 [_ace-or-z0-9A-Z]*[_ace-or-zA-Z][_ace-or-z0-9A-Z]*	{pushItem(hashTable,yytext,yytext); return TK_IDENTIFIER;}
 "\n"										{++lineNumber;}
-[ /t]
+[ \t]
 "//".*
 
 
