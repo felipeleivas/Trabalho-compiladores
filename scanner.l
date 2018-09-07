@@ -1,17 +1,14 @@
 %{
 	#include "util.h"
 	#include "y.tab.h"
+	#include "hash.h"
 	int lineNumber = 1;
 	int running = TRUE;
 	HASH_TABLE *hashTable;
 	int getLineNumber(void){
 		return lineNumber;
 	}
-	#include "hash.h"
 %}
-
-
-
 
 %x COMMENT
 
@@ -30,6 +27,8 @@
 "print"										{return KW_PRINT;}
 "<="										{return OPERATOR_LE;}
 ">="										{return OPERATOR_GE;}
+"<"											{return OPERATOR_L;}
+">"											{return OPERATOR_G;}
 "=="										{return OPERATOR_EQ;}
 "not"										{return OPERATOR_NOT;}
 "and"										{return OPERATOR_AND;}
@@ -51,7 +50,7 @@
 
 %%
 
-int hashTableSize = 997;
+int hashTableSize = 7;
 
 void initMe(void){
 	hashTable = createHashTable(hashTableSize);
@@ -60,8 +59,6 @@ void initMe(void){
 int isRunning(void){
 	return running;
 }
-
-
 
 int yywrap(void){
 	running = FALSE;

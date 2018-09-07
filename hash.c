@@ -1,5 +1,4 @@
 #include "hash.h"
-#include "tokens.h"
 
 HASH_TABLE* createHashTable(int size) {
     int i;
