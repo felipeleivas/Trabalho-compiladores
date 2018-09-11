@@ -2,6 +2,8 @@
 	#include "util.h"
 	#include "y.tab.h"
 	#include "hash.h"
+
+	
 	int lineNumber = 1;
 	int running = TRUE;
 	HASH_TABLE *hashTable;
@@ -13,8 +15,8 @@
 %x COMMENT
 
 %%
-[0-9]+										{pushItem(hashTable,yytext,yytext); return LIT_INTEGER;}
-[0-9]+"."[0-9]+								{pushItem(hashTable,yytext,yytext); return LIT_FLOAT;}
+[0-9]+										{yylval.symbol=pushItem(hashTable,yytext,yytext,SYMBOL_LIT_INT); return LIT_INTEGER;}
+[0-9]+"."[0-9]+								{yylval.symbol=pushItem(hashTable,yytext,yytext,SYMBOL_LIT_FLOAT); return LIT_FLOAT;}
 "char" 										{return KW_CHAR;}
 "int" 										{return KW_INT;}
 "float" 									{return KW_FLOAT;}
@@ -33,10 +35,10 @@
 "not"										{return OPERATOR_NOT;}
 "and"										{return OPERATOR_AND;}
 "or"										{return OPERATOR_OR;}
-\"(\\.|[^"])*\"								{pushItem(hashTable,yytext,yytext); return LIT_STRING;}
-['][-a-zA-Z0-9][']                  	    {pushItem(hashTable,yytext,yytext);  return LIT_CHAR;}
+\"(\\.|[^"])*\"								{yylval.symbol=pushItem(hashTable,yytext,yytext,SYMBOL_LIT_STRING); return LIT_STRING;}
+['][-a-zA-Z0-9][']                  	    {yylval.symbol=pushItem(hashTable,yytext,yytext,SYMBOL_LIT_CHAR);  return LIT_CHAR;}
 [-|,|;|:|d|b|q|p|{|}|+|*|/|<|>|=|!|&|$|#] 	{return yytext[0];}
-[_ace-or-z0-9A-Z]*[_ace-or-zA-Z][_ace-or-z0-9A-Z]*	{pushItem(hashTable,yytext,yytext); return TK_IDENTIFIER;}
+[_ace-or-z0-9A-Z]*[_ace-or-zA-Z][_ace-or-z0-9A-Z]*	{yylval.symbol=pushItem(hashTable,yytext,yytext,SYMBOL_TK_IDENTIFIER); return TK_IDENTIFIER;}
 "\n"										{++lineNumber;}
 [ \t]
 "//".*

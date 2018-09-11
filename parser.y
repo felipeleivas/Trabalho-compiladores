@@ -1,9 +1,9 @@
 %{
     #include <stdio.h>
-    #include <stdlib.h>    
+    #include <stdlib.h> 
+    #include "hash.h"   
 %}
 
-%union { int value; }
 
 %token KW_CHAR       
 %token KW_INT        
@@ -34,6 +34,7 @@
 %left '+' '-'
 %left '*' '/'
 
+%union { struct hashItem  *symbol; }
 %%
 
 program: element 

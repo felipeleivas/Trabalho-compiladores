@@ -1,4 +1,5 @@
 #include "hash.h"
+#include "util.h"
 
 HASH_TABLE* createHashTable(int size) {
     int i;
@@ -22,7 +23,7 @@ HASH_TABLE* createHashTable(int size) {
     return hashTable;
 }
 
-void pushItem(HASH_TABLE* hashTable, char* key, char* value) {
+HASH_ITEM* pushItem(HASH_TABLE* hashTable, char* key, char* value,int type) {
     HASH_ITEM *newItem = NULL;
     HASH_ITEM *nextItem = NULL;
     HASH_ITEM *lastItem = NULL;
@@ -38,9 +39,10 @@ void pushItem(HASH_TABLE* hashTable, char* key, char* value) {
     // This item already exists
 	if( nextItem != NULL && strcmp(key, nextItem->key) == 0) {
 		nextItem->value = strdup( value );
+        return nextItem;
 
 	} else {
-		newItem = createItem(key, value);
+		newItem = createItem(key, value, type);
 
 		// We're at the start of the linked list in this index
 		if( nextItem == hashTable->items[index] ) {
@@ -56,6 +58,7 @@ void pushItem(HASH_TABLE* hashTable, char* key, char* value) {
 			newItem->next = nextItem;
 			lastItem->next = newItem;
 		}
+        return newItem;
     }
 }
 
@@ -72,7 +75,7 @@ int generateIndex(char* key, int size) {
     return hashval % size;
 }
 
-HASH_ITEM* createItem(char* key, char* value) {
+HASH_ITEM* createItem(char* key, char* value, int type) {
     HASH_ITEM *newItem;
     if((newItem = malloc(sizeof(HASH_ITEM))) == NULL) {
         return NULL;
@@ -80,6 +83,7 @@ HASH_ITEM* createItem(char* key, char* value) {
     newItem->key = strdup(key);
     newItem->value = strdup(value);
     newItem->next = NULL;
+    newItem->type = type;
 
     return newItem;
 }
@@ -108,7 +112,16 @@ void printHashTable(HASH_TABLE* hashTable) {
         printf("[%d]\n", i);
         hashItem = hashTable->items[i];
         while(hashItem != NULL) {
-            printf(" >>Item:\n   -key: %s\n   -value: %s\n", hashItem->key, hashItem->value);
+            if(hashItem->type == SYMBOL_LIT_INT)
+                printf(" >>Item:\n   -key: %s\n   -value: %s\n   -type: SYMBOL_LIT_INT\n", hashItem->key, hashItem->value, hashItem->type);
+            if(hashItem->type == SYMBOL_LIT_FLOAT)
+                printf(" >>Item:\n   -key: %s\n   -value: %s\n   -type: SYMBOL_LIT_FLOAT\n", hashItem->key, hashItem->value, hashItem->type);
+            if(hashItem->type == SYMBOL_LIT_STRING)
+                printf(" >>Item:\n   -key: %s\n   -value: %s\n   -type: SYMBOL_LIT_STRING\n", hashItem->key, hashItem->value, hashItem->type);
+            if(hashItem->type == SYMBOL_LIT_CHAR)
+                printf(" >>Item:\n   -key: %s\n   -value: %s\n   -type: SYMBOL_LIT_CHAR\n", hashItem->key, hashItem->value, hashItem->type);
+            if(hashItem->type == SYMBOL_TK_IDENTIFIER)
+                printf(" >>Item:\n   -key: %s\n   -value: %s\n   -type: SYMBOL_TK_IDENTIFIER\n", hashItem->key, hashItem->value, hashItem->type);
             hashItem = hashItem->next;
         }
     }
