@@ -1,7 +1,8 @@
 %{
 	#include "util.h"
-	#include "y.tab.h"
 	#include "hash.h"
+	#include "ast.h"
+	#include "y.tab.h"
 
 	
 	int lineNumber = 1;
@@ -15,8 +16,8 @@
 %x COMMENT
 
 %%
-[0-9]+										{yylval.symbol=pushItem(hashTable,yytext,yytext,SYMBOL_LIT_INT); return LIT_INTEGER;}
-[0-9]+"."[0-9]+								{yylval.symbol=pushItem(hashTable,yytext,yytext,SYMBOL_LIT_FLOAT); return LIT_FLOAT;}
+[0-9]+										{yylval.symbol=pushItem(hashTable,yytext,yytext,AST_SYMBOL); return LIT_INTEGER;}
+[0-9]+"."[0-9]+								{yylval.symbol=pushItem(hashTable,yytext,yytext,AST_SYMBOL); return LIT_FLOAT;}
 "char" 										{return KW_CHAR;}
 "int" 										{return KW_INT;}
 "float" 									{return KW_FLOAT;}
@@ -29,16 +30,14 @@
 "print"										{return KW_PRINT;}
 "<="										{return OPERATOR_LE;}
 ">="										{return OPERATOR_GE;}
-"<"											{return OPERATOR_L;}
-">"											{return OPERATOR_G;}
 "=="										{return OPERATOR_EQ;}
 "not"										{return OPERATOR_NOT;}
 "and"										{return OPERATOR_AND;}
 "or"										{return OPERATOR_OR;}
-\"(\\.|[^"])*\"								{yylval.symbol=pushItem(hashTable,yytext,yytext,SYMBOL_LIT_STRING); return LIT_STRING;}
-['][-a-zA-Z0-9][']                  	    {yylval.symbol=pushItem(hashTable,yytext,yytext,SYMBOL_LIT_CHAR);  return LIT_CHAR;}
+\"(\\.|[^"])*\"								{yylval.symbol=pushItem(hashTable,yytext,yytext,AST_SYMBOL); return LIT_STRING;}
+['][-a-zA-Z0-9][']                  	    {yylval.symbol=pushItem(hashTable,yytext,yytext,AST_SYMBOL);  return LIT_CHAR;}
 [-|,|;|:|d|b|q|p|{|}|+|*|/|<|>|=|!|&|$|#] 	{return yytext[0];}
-[_ace-or-z0-9A-Z]*[_ace-or-zA-Z][_ace-or-z0-9A-Z]*	{yylval.symbol=pushItem(hashTable,yytext,yytext,SYMBOL_TK_IDENTIFIER); return TK_IDENTIFIER;}
+[_ace-or-z0-9A-Z]*[_ace-or-zA-Z][_ace-or-z0-9A-Z]*	{yylval.symbol=pushItem(hashTable,yytext,yytext,AST_SYMBOL); return TK_IDENTIFIER;}
 "\n"										{++lineNumber;}
 [ \t]
 "//".*

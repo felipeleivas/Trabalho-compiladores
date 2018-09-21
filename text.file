@@ -1,5 +1,5 @@
 // UFRGS - Compiladores - Marcelo Johann - 2018/2
-
+//aa
 int a = 0;
 int i = 0;
 int v q10p: 0 0 0 0 0 0 0 0 0 0; 
@@ -10,10 +10,10 @@ char x = 65;
 
 int main db
   {
-  a = 7;
+  a = 7 - 8;
   v qap = 90;
   print vqap;
-
+  
   print "Digite um numero: \n";
   read a;
   while i<10
@@ -28,10 +28,8 @@ int main db
     print "Parou no meio\n";
 
   if d a==11 or a== 17 b then
-    print "Var a ficou 11 ou 17\n";
+    print "Var a ficou 11 ou 17\n\n\n\n\n";
 
-  if da==10b then else
-    ;
   ;;;
   {;};
   {};

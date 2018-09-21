@@ -1,6 +1,7 @@
 %{
     #include <stdio.h>
     #include <stdlib.h> 
+    #include "ast.h"   
     #include "hash.h"   
 %}
 
@@ -17,24 +18,28 @@
 %token KW_PRINT      
 %token OPERATOR_LE   
 %token OPERATOR_GE    
-%token OPERATOR_L   
-%token OPERATOR_G  
 %token OPERATOR_EQ   
 %token OPERATOR_OR   
 %token OPERATOR_AND  
 %token OPERATOR_NOT  
-%token TK_IDENTIFIER 
-%token LIT_INTEGER   
-%token LIT_FLOAT     
-%token LIT_CHAR      
-%token LIT_STRING    
+%token<symbol> TK_IDENTIFIER 
+%token<symbol> LIT_INTEGER   
+%token<symbol> LIT_FLOAT     
+%token<symbol> LIT_CHAR      
+%token<symbol> LIT_STRING    
 %token TOKEN_ERROR   
+
+
+
+
+%type<ast> expression
+%type<ast> literal
 
 %left '<' '>'
 %left '+' '-'
 %left '*' '/'
 
-%union { struct hashItem  *symbol; }
+%union { struct hashItem  *symbol; struct ast_node* ast;}
 %%
 
 program: element 
@@ -42,10 +47,10 @@ program: element
 
 element: variablelDeclaration element
         | functionDeclaration element
-        | %empty
+        |
         ;
 
-variablelDeclaration: type TK_IDENTIFIER '=' expression ';'  
+variablelDeclaration: type TK_IDENTIFIER '=' expression ';'              {astPrint($4, 0);}
                     | type TK_IDENTIFIER 'q' LIT_INTEGER 'p' ';'
                     | type TK_IDENTIFIER 'q' LIT_INTEGER 'p' ':' arrayInitialization ';'
                     ;
@@ -55,18 +60,18 @@ type: KW_CHAR
     | KW_FLOAT
     ;
 
-expression: literal
-        | TK_IDENTIFIER 
+expression: literal 
+        | TK_IDENTIFIER                         { $$ = astCreate(AST_SYMBOL, $1,0,0,0,0);}
         | TK_IDENTIFIER 'q' expression 'p'
         | TK_IDENTIFIER 'd' parameters 'b'
-        | expression '+' expression
-        | expression '-' expression
-        | expression '*' expression 
-        | expression '/' expression 
+        | expression '+' expression             { $$ = astCreate(AST_ADD, 0,$1,$3,0,0);}
+        | expression '-' expression             { $$ = astCreate(AST_SUB, 0,$1,$3,0,0);}
+        | expression '*' expression             { $$ = astCreate(AST_MUL, 0,$1,$3,0,0);}
+        | expression '/' expression             { $$ = astCreate(AST_DIV, 0,$1,$3,0,0);}
         | expression OPERATOR_LE expression
         | expression OPERATOR_GE expression
-        | expression OPERATOR_L expression
-        | expression OPERATOR_G expression
+        | expression '>' expression
+        | expression '<' expression
         | expression OPERATOR_EQ expression
         | expression OPERATOR_OR expression
         | expression OPERATOR_AND expression
@@ -74,23 +79,21 @@ expression: literal
         | 'd' expression 'b'
         ;
 
-parameters: literal parametersAux
-            | TK_IDENTIFIER parametersAux
-            | %empty
+parameters: expression parametersAux
+            |
             ;
 
-parametersAux: ',' literal parametersAux
-            | ',' TK_IDENTIFIER parametersAux
-            | %empty
+parametersAux: ',' expression parametersAux
+            |
             ;
 
-literal: LIT_CHAR
-        | LIT_FLOAT
-        | LIT_INTEGER
+literal: LIT_CHAR       { $$ = astCreate(AST_SYMBOL, $1,0,0,0,0);}
+        | LIT_FLOAT     { $$ = astCreate(AST_SYMBOL, $1,0,0,0,0);}
+        | LIT_INTEGER   { $$ = astCreate(AST_SYMBOL, $1,0,0,0,0);}
         ;
 
 arrayInitialization: literal arrayInitialization
-                    | %empty 
+                    |
                     ;
 
 functionDeclaration: head body
@@ -100,11 +103,11 @@ head: type TK_IDENTIFIER 'd' parametersDeclaration 'b'
     ;
 
 parametersDeclaration: type TK_IDENTIFIER parametersDeclarationAux
-            | %empty
+            |
             ;
 
 parametersDeclarationAux: ',' type TK_IDENTIFIER parametersDeclarationAux
-            | %empty
+            |
             ;
 
 body: block
@@ -114,7 +117,7 @@ block: '{' commandList '}'
     ;
 
 commandList: command ';' commandList
-            | %empty
+            |
             ;
 
 command: atribuation
@@ -123,7 +126,7 @@ command: atribuation
         | fluxControl
         | return
         | block
-        | %empty
+        |
         ;
 
 atribuation: TK_IDENTIFIER '=' expression
@@ -138,25 +141,20 @@ print: KW_PRINT printItems
 
 printItems: LIT_STRING printItemsAux
             | expression printItemsAux
-            | %empty
             ;
 
 printItemsAux: ',' LIT_STRING printItemsAux
             | ',' expression printItemsAux
-            | %empty
+            |
             ;
 
 return: KW_RETURN expression
         ;
 
-fluxControl: KW_IF expression KW_THEN fluxControlBody KW_ELSE fluxControlBody
-            | KW_IF expression KW_THEN fluxControlBody 
-            | KW_WHILE expression fluxControlBody
+fluxControl: KW_IF expression KW_THEN command KW_ELSE command
+            | KW_IF expression KW_THEN command 
+            | KW_WHILE expression command
             ;
-
-fluxControlBody: block
-                | command
-                ;
 
 %%
 

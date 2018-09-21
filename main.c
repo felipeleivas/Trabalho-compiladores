@@ -16,6 +16,5 @@ int main( int argc, char **argv)
     initMe();
 
     yyparse();
-    printHashTable(hashTable);
     exit(0);
 }

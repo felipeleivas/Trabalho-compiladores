@@ -57,18 +57,16 @@ extern int yydebug;
     KW_PRINT = 267,
     OPERATOR_LE = 268,
     OPERATOR_GE = 269,
-    OPERATOR_L = 270,
-    OPERATOR_G = 271,
-    OPERATOR_EQ = 272,
-    OPERATOR_OR = 273,
-    OPERATOR_AND = 274,
-    OPERATOR_NOT = 275,
-    TK_IDENTIFIER = 276,
-    LIT_INTEGER = 277,
-    LIT_FLOAT = 278,
-    LIT_CHAR = 279,
-    LIT_STRING = 280,
-    TOKEN_ERROR = 281
+    OPERATOR_EQ = 270,
+    OPERATOR_OR = 271,
+    OPERATOR_AND = 272,
+    OPERATOR_NOT = 273,
+    TK_IDENTIFIER = 274,
+    LIT_INTEGER = 275,
+    LIT_FLOAT = 276,
+    LIT_CHAR = 277,
+    LIT_STRING = 278,
+    TOKEN_ERROR = 279
   };
 #endif
 /* Tokens.  */
@@ -84,28 +82,26 @@ extern int yydebug;
 #define KW_PRINT 267
 #define OPERATOR_LE 268
 #define OPERATOR_GE 269
-#define OPERATOR_L 270
-#define OPERATOR_G 271
-#define OPERATOR_EQ 272
-#define OPERATOR_OR 273
-#define OPERATOR_AND 274
-#define OPERATOR_NOT 275
-#define TK_IDENTIFIER 276
-#define LIT_INTEGER 277
-#define LIT_FLOAT 278
-#define LIT_CHAR 279
-#define LIT_STRING 280
-#define TOKEN_ERROR 281
+#define OPERATOR_EQ 270
+#define OPERATOR_OR 271
+#define OPERATOR_AND 272
+#define OPERATOR_NOT 273
+#define TK_IDENTIFIER 274
+#define LIT_INTEGER 275
+#define LIT_FLOAT 276
+#define LIT_CHAR 277
+#define LIT_STRING 278
+#define TOKEN_ERROR 279
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 
 union YYSTYPE
 {
-#line 37 "parser.y" /* yacc.c:1909  */
- struct hashItem  *symbol; 
+#line 42 "parser.y" /* yacc.c:1909  */
+ struct hashItem  *symbol; struct ast_node* ast;
 
-#line 109 "y.tab.h" /* yacc.c:1909  */
+#line 105 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

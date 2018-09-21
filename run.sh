@@ -1,2 +1,2 @@
 make
-./etapa2 text.file
+./etapa3 text.file

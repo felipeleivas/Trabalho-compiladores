@@ -1,3 +1,6 @@
+#ifndef HASH_HEADER
+#define HASH_HEADER
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -22,3 +25,4 @@ HASH_ITEM* pushItem(HASH_TABLE* hashTable, char* key, char* value,int type);
 HASH_ITEM* createItem(char* key, char* value, int type);
 char* getItem(HASH_TABLE* hashTable, char *key);
 void printHashTable(HASH_TABLE* hashTable);
+#endif
