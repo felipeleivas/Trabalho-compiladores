@@ -34,11 +34,16 @@
 
 %type<ast> expression
 %type<ast> literal
+%type<ast> parameters
+%type<ast> fluxControl
+%type<ast> command
 
 %left '<' '>'
 %left '+' '-'
 %left '*' '/'
-%left and or dps comparaçoes
+%left OPERATOR_AND OPERATOR_OR
+%left OPERATOR_NOT
+%left OPERATOR_LE OPERATOR_GE OPERATOR_E
 
 %union { struct hashItem  *symbol; struct ast_node* ast;}
 %%
@@ -62,13 +67,14 @@ type: KW_CHAR
     ;
 
 expression: literal 
-        | TK_IDENTIFIER                         { $$ = astCreate(AST_SYMBOL, $1,0,0,0,0);}
-        | TK_IDENTIFIER 'q' expression 'p'
-        | TK_IDENTIFIER 'd' parameters 'b'
-        | expression '+' expression             { $$ = astCreate(AST_ADD, 0,$1,$3,0,0);}
-        | expression '-' expression             { $$ = astCreate(AST_SUB, 0,$1,$3,0,0);}
-        | expression '*' expression             { $$ = astCreate(AST_MUL, 0,$1,$3,0,0);}
-        | expression '/' expression             { $$ = astCreate(AST_DIV, 0,$1,$3,0,0);}
+        | TK_IDENTIFIER                         { $$ = astCreate(AST_LITERAL, $1,0,0,0,0);}
+        | TK_IDENTIFIER 'q' expression 'p'      { $$ = astCreate(AST_ARRAY, $1,$3,0,0,0);}
+        | TK_IDENTIFIER 'd' parameters 'b'      { $$ = astCreate(AST_FUNCTION, $1,$3,0,0,0);}
+        | TK_IDENTIFIER 'd' 'b'                 { $$ = astCreate(AST_FUNCTION, $1,0,0,0,0);}
+        | expression '+' expression             { $$ = astCreate(AST_OPERATOR_ADD, 0,$1,$3,0,0);}
+        | expression '-' expression             { $$ = astCreate(AST_OPERATOR_SUB, 0,$1,$3,0,0);}
+        | expression '*' expression             { $$ = astCreate(AST_OPERATOR_MUL, 0,$1,$3,0,0);}
+        | expression '/' expression             { $$ = astCreate(AST_OPERATOR_DIV, 0,$1,$3,0,0);}
         | expression OPERATOR_LE expression     { $$ = astCreate(AST_OPERATOR_LE, 0,$1,$3,0,0);}
         | expression OPERATOR_GE expression     { $$ = astCreate(AST_OPERATOR_GE, 0,$1,$3,0,0);}
         | expression '>' expression             { $$ = astCreate(AST_OPERATOR_L, 0,$1,$3,0,0);}
@@ -76,21 +82,19 @@ expression: literal
         | expression OPERATOR_EQ expression     { $$ = astCreate(AST_OPERATOR_EQ, 0,$1,$3,0,0);}
         | expression OPERATOR_OR expression     { $$ = astCreate(AST_OPERATOR_OR, 0,$1,$3,0,0);}
         | expression OPERATOR_AND expression    { $$ = astCreate(AST_OPERATOR_AND, 0,$1,$3,0,0);}
-        | OPERATOR_NOT expression
-        | 'd' expression 'b'
+        | OPERATOR_NOT expression               {$$ = astCreate(AST_OPERATOR_NOT, 0,$2,0,0,0);}
+        | 'd' expression 'b'                    {$$ = $2;}
         ;
 
-parameters: expression parametersAux
-            |
+parameters: expression parameters            {$$ = astCreate(AST_PARAMETER, 0,$1,$2,0,0);}
+            | ',' expression parameters      {$$ = astCreate(AST_PARAMETER, 0,$2,$3,0,0);}
+            | ',' expression                 {$$ = astCreate(AST_PARAMETER, 0,$2,0,0,0);}
+            | expression                     {$$ = astCreate(AST_PARAMETER, 0,$1,0,0,0);}
             ;
 
-parametersAux: ',' expression parametersAux
-            |
-            ;
-
-literal: LIT_CHAR       { $$ = astCreate(AST_SYMBOL, $1,0,0,0,0);}
-        | LIT_FLOAT     { $$ = astCreate(AST_SYMBOL, $1,0,0,0,0);}
-        | LIT_INTEGER   { $$ = astCreate(AST_SYMBOL, $1,0,0,0,0);}
+literal: LIT_CHAR       { $$ = astCreate(AST_LITERAL, $1,0,0,0,0);}
+        | LIT_FLOAT     { $$ = astCreate(AST_LITERAL, $1,0,0,0,0);}
+        | LIT_INTEGER   { $$ = astCreate(AST_LITERAL, $1,0,0,0,0);}
         ;
 
 arrayInitialization: literal arrayInitialization
@@ -115,19 +119,21 @@ body: block
     ;
 
 block: '{' commandList '}'
+    | '{' '}'
     ;
 
 commandList: command ';' commandList
-            |
+            | command ';'
+            | ';' commandList
+            | ';'
             ;
 
-command: atribuation
-        | read
-        | print
-        | fluxControl
-        | return
-        | block
-        |
+command: atribuation    {$$ = 0;}
+        | read          {$$ = 0;}
+        | print         {$$ = 0;}
+        | fluxControl   {astPrint($1, 0);}
+        | return        {$$ = 0;}
+        | block         {$$ = 0;}
         ;
 
 atribuation: TK_IDENTIFIER '=' expression
@@ -152,9 +158,9 @@ printItemsAux: ',' LIT_STRING printItemsAux
 return: KW_RETURN expression
         ;
 
-fluxControl: KW_IF expression KW_THEN command KW_ELSE command   {astPrint($2, 0);}
-            | KW_IF expression KW_THEN command                  {astPrint($2, 0);}
-            | KW_WHILE expression command
+fluxControl: KW_IF expression KW_THEN command KW_ELSE command {$$ = astCreate(AST_IF, 0,$2,astCreate(AST_THEN, 0,$4,0,0,0),astCreate(AST_ELSE, 0,$6,0,0,0),0);}
+            | KW_IF expression KW_THEN command                {$$ = astCreate(AST_IF, 0,$2,astCreate(AST_THEN, 0,$4,0,0,0),0,0);}
+            | KW_WHILE expression command                     {$$ = astCreate(AST_WHILE, 0,$2,$3,0,0);}
             ;
 
 %%
