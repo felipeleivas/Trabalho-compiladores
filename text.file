@@ -4,7 +4,7 @@ int a = 0;
 int i = 0;
 int v q10p: 0 0 0 0 0 0 0 0 0 0; 
 int mat q10p; 
-float f = 10.55;
+float f = 10.55 + 3.2;
 char c = 'x';
 char x = 65;
 
@@ -14,7 +14,7 @@ int main db
   v qap = 90;
   print vqap;
   
-  print "Digite um numero: \n";
+  print "Digite um numero: \n";   
   read a;
   while i<10
     {
@@ -27,7 +27,7 @@ int main db
   if a==5 then 
     print "Parou no meio\n";
 
-  if d a==11 or a== 17 b then
+  if a==11 or a==17 then
     print "Var a ficou 11 ou 17\n\n\n\n\n";
 
   ;;;

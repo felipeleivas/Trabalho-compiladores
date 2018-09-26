@@ -8,6 +8,13 @@
 #define AST_DIV 3
 #define AST_MUL 4
 #define AST_ADD 5
+#define AST_OPERATOR_LE 6
+#define AST_OPERATOR_GE 7
+#define AST_OPERATOR_EQ 8
+#define AST_OPERATOR_L 9
+#define AST_OPERATOR_G 10
+#define AST_OPERATOR_OR 11
+#define AST_OPERATOR_AND 12
 
 #include "hash.h"
 

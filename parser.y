@@ -38,6 +38,7 @@
 %left '<' '>'
 %left '+' '-'
 %left '*' '/'
+%left and or dps comparaçoes
 
 %union { struct hashItem  *symbol; struct ast_node* ast;}
 %%
@@ -68,13 +69,13 @@ expression: literal
         | expression '-' expression             { $$ = astCreate(AST_SUB, 0,$1,$3,0,0);}
         | expression '*' expression             { $$ = astCreate(AST_MUL, 0,$1,$3,0,0);}
         | expression '/' expression             { $$ = astCreate(AST_DIV, 0,$1,$3,0,0);}
-        | expression OPERATOR_LE expression
-        | expression OPERATOR_GE expression
-        | expression '>' expression
-        | expression '<' expression
-        | expression OPERATOR_EQ expression
-        | expression OPERATOR_OR expression
-        | expression OPERATOR_AND expression
+        | expression OPERATOR_LE expression     { $$ = astCreate(AST_OPERATOR_LE, 0,$1,$3,0,0);}
+        | expression OPERATOR_GE expression     { $$ = astCreate(AST_OPERATOR_GE, 0,$1,$3,0,0);}
+        | expression '>' expression             { $$ = astCreate(AST_OPERATOR_L, 0,$1,$3,0,0);}
+        | expression '<' expression             { $$ = astCreate(AST_OPERATOR_G, 0,$1,$3,0,0);}
+        | expression OPERATOR_EQ expression     { $$ = astCreate(AST_OPERATOR_EQ, 0,$1,$3,0,0);}
+        | expression OPERATOR_OR expression     { $$ = astCreate(AST_OPERATOR_OR, 0,$1,$3,0,0);}
+        | expression OPERATOR_AND expression    { $$ = astCreate(AST_OPERATOR_AND, 0,$1,$3,0,0);}
         | OPERATOR_NOT expression
         | 'd' expression 'b'
         ;
@@ -151,8 +152,8 @@ printItemsAux: ',' LIT_STRING printItemsAux
 return: KW_RETURN expression
         ;
 
-fluxControl: KW_IF expression KW_THEN command KW_ELSE command
-            | KW_IF expression KW_THEN command 
+fluxControl: KW_IF expression KW_THEN command KW_ELSE command   {astPrint($2, 0);}
+            | KW_IF expression KW_THEN command                  {astPrint($2, 0);}
             | KW_WHILE expression command
             ;
 

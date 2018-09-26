@@ -24,7 +24,16 @@ void astPrint(AST* node,int level){
 	for(i=0;i<level ;++i)
 		fprintf(stderr, "  ");
 
-	fprintf(stderr,"AST(");
+	fprintf(stderr,"AST");
+	fprintf(stderr,"\n");
+	
+	for(i=0;i<level ;++i)
+		fprintf(stderr, "  ");
+	fprintf(stderr,"(");
+	
+	fprintf(stderr,"\n");
+	for(i=0;i<level+1;++i)
+		fprintf(stderr, "  ");
 
 	switch(node->type){
 		case AST_SYMBOL: fprintf(stderr, "AST_SYMBOL" ); break;
@@ -32,15 +41,27 @@ void astPrint(AST* node,int level){
 		case AST_MUL: fprintf(stderr, "AST_MUL" ); break;
 		case AST_SUB: fprintf(stderr, "AST_SUB" ); break;
 		case AST_DIV: fprintf(stderr, "AST_DIV" ); break;
+		case AST_OPERATOR_LE: fprintf(stderr, "AST_OPERATOR_LE" ); break;
+		case AST_OPERATOR_GE: fprintf(stderr, "AST_OPERATOR_GE" ); break;
+		case AST_OPERATOR_EQ: fprintf(stderr, "AST_OPERATOR_EQ" ); break;
+		case AST_OPERATOR_L: fprintf(stderr, "AST_OPERATOR_L" ); break;
+		case AST_OPERATOR_G: fprintf(stderr, "AST_OPERATOR_G" ); break;
+		case AST_OPERATOR_OR: fprintf(stderr, "AST_OPERATOR_OR" ); break;
+		case AST_OPERATOR_AND: fprintf(stderr, "AST_OPERATOR_AND" ); break;
 		default: fprintf(stderr, "UNKNOWN" ); break;
 
 	}
 	if(node->symbol != 0){
-		printf("%s\n",node->symbol->value);
+		fprintf(stderr, " %s",node->symbol->value);
 	}
 
 	for(i=0; i<MAX_SONS; i++){
 		astPrint(node->son[i], level + 1);
 	}
-	fprintf(stderr,")");
+	fprintf(stderr,"\n");
+	
+	for(i=0;i<level ;++i)
+		fprintf(stderr, "  ");
+
+	fprintf(stderr,")\n");
 }

@@ -1399,26 +1399,80 @@ yyreduce:
 #line 1400 "y.tab.c" /* yacc.c:1646  */
     break;
 
+  case 20:
+#line 71 "parser.y" /* yacc.c:1646  */
+    { (yyval.ast) = astCreate(AST_OPERATOR_LE, 0,(yyvsp[-2].ast),(yyvsp[0].ast),0,0);}
+#line 1406 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 21:
+#line 72 "parser.y" /* yacc.c:1646  */
+    { (yyval.ast) = astCreate(AST_OPERATOR_GE, 0,(yyvsp[-2].ast),(yyvsp[0].ast),0,0);}
+#line 1412 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 22:
+#line 73 "parser.y" /* yacc.c:1646  */
+    { (yyval.ast) = astCreate(AST_OPERATOR_L, 0,(yyvsp[-2].ast),(yyvsp[0].ast),0,0);}
+#line 1418 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 23:
+#line 74 "parser.y" /* yacc.c:1646  */
+    { (yyval.ast) = astCreate(AST_OPERATOR_G, 0,(yyvsp[-2].ast),(yyvsp[0].ast),0,0);}
+#line 1424 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 24:
+#line 75 "parser.y" /* yacc.c:1646  */
+    { (yyval.ast) = astCreate(AST_OPERATOR_EQ, 0,(yyvsp[-2].ast),(yyvsp[0].ast),0,0);}
+#line 1430 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 25:
+#line 76 "parser.y" /* yacc.c:1646  */
+    { (yyval.ast) = astCreate(AST_OPERATOR_OR, 0,(yyvsp[-2].ast),(yyvsp[0].ast),0,0);}
+#line 1436 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 26:
+#line 77 "parser.y" /* yacc.c:1646  */
+    { (yyval.ast) = astCreate(AST_OPERATOR_AND, 0,(yyvsp[-2].ast),(yyvsp[0].ast),0,0);}
+#line 1442 "y.tab.c" /* yacc.c:1646  */
+    break;
+
   case 33:
 #line 90 "parser.y" /* yacc.c:1646  */
     { (yyval.ast) = astCreate(AST_SYMBOL, (yyvsp[0].symbol),0,0,0,0);}
-#line 1406 "y.tab.c" /* yacc.c:1646  */
+#line 1448 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
 #line 91 "parser.y" /* yacc.c:1646  */
     { (yyval.ast) = astCreate(AST_SYMBOL, (yyvsp[0].symbol),0,0,0,0);}
-#line 1412 "y.tab.c" /* yacc.c:1646  */
+#line 1454 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
 #line 92 "parser.y" /* yacc.c:1646  */
     { (yyval.ast) = astCreate(AST_SYMBOL, (yyvsp[0].symbol),0,0,0,0);}
-#line 1418 "y.tab.c" /* yacc.c:1646  */
+#line 1460 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 65:
+#line 154 "parser.y" /* yacc.c:1646  */
+    {astPrint((yyvsp[-4].ast), 0);}
+#line 1466 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 66:
+#line 155 "parser.y" /* yacc.c:1646  */
+    {astPrint((yyvsp[-2].ast), 0);}
+#line 1472 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1422 "y.tab.c" /* yacc.c:1646  */
+#line 1476 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
