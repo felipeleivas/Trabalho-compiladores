@@ -3,3 +3,5 @@ etapa1
 etapa2
 etapa3
 *.tgz
+lex.yy.c
+y.tab.c
