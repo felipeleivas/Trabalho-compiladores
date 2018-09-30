@@ -36,6 +36,7 @@ int main db
   ;;;
   {;};
   {};
+  return 2;
   read a;
   }
 

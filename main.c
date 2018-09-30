@@ -18,8 +18,7 @@ int main( int argc, char **argv)
     initMe();
 
     yyparse();
-    astPrint(programNode,0);
-    FILE *p = fopen("file.txt","w");
+    FILE *p = fopen(argv[1],"w");
 	printPogramToFile(programNode,p);	
 	fclose(p);
     exit(0);

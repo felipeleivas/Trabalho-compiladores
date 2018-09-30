@@ -30,46 +30,45 @@ void astPrint(AST* node,int level){
 	printSpaces(level);
 
 	switch(node->type){
-		case AST_LITERAL: fprintf(stderr, "AST_LITERAL" ); break;
-		case AST_OPERATOR_ADD: fprintf(stderr, "AST_ADD" ); break;
-		case AST_OPERATOR_MUL: fprintf(stderr, "AST_MUL" ); break;
-		case AST_OPERATOR_SUB: fprintf(stderr, "AST_SUB" ); break;
-		case AST_OPERATOR_DIV: fprintf(stderr, "AST_DIV" ); break;
-		case AST_OPERATOR_LE: fprintf(stderr, "AST_OPERATOR_LE" ); break;
-		case AST_OPERATOR_GE: fprintf(stderr, "AST_OPERATOR_GE" ); break;
-		case AST_OPERATOR_EQ: fprintf(stderr, "AST_OPERATOR_EQ" ); break;
-		case AST_OPERATOR_L: fprintf(stderr, "AST_OPERATOR_L" ); break;
-		case AST_OPERATOR_G: fprintf(stderr, "AST_OPERATOR_G" ); break;
-		case AST_OPERATOR_OR: fprintf(stderr, "AST_OPERATOR_OR" ); break;
-		case AST_OPERATOR_AND: fprintf(stderr, "AST_OPERATOR_AND" ); break;
-		case AST_OPERATOR_NOT: fprintf(stderr, "AST_OPERATOR_NOT" ); break;
-		case AST_VECTOR: fprintf(stderr, "AST_VECTOR" ); break;
-		case AST_FUNCTION: fprintf(stderr, "AST_FUNCTION" ); break;
-		case AST_PARAMETER: fprintf(stderr, "AST_PARAMETER" ); break;
-		case AST_IF: fprintf(stderr, "AST_IF" ); break;
-		case AST_THEN: fprintf(stderr, "AST_THEN" ); break;
-		case AST_ELSE: fprintf(stderr, "AST_ELSE" ); break;
-		case AST_WHILE: fprintf(stderr, "AST_WHILE" ); break;
-		case AST_READ: fprintf(stderr, "AST_READ" ); break;
-		case AST_ITEM_PRINT: fprintf(stderr, "AST_ITEM_PRINT" ); break;
-		case AST_PRINT: fprintf(stderr, "AST_PRINT" ); break;
-		case AST_PRINT_STRING: fprintf(stderr, "AST_PRINT_STRING" ); break;
-		case AST_PRINT_EXPRESSION: fprintf(stderr, "AST_PRINT_EXPRESSION" ); break;
-		case AST_BLOCK: fprintf(stderr, "AST_BLOCK" ); break;
-		case AST_RETURN: fprintf(stderr, "AST_RETURN" ); break;
-		case AST_COMMAND: fprintf(stderr, "AST_COMMAND" ); break;
-		case AST_ATTRIBUATION: fprintf(stderr, "AST_ATTRIBUATION" ); break;
-		case AST_ATTRIBUATION_VECTOR: fprintf(stderr, "AST_ATTRIBUATION_VECTOR" ); break;
-		case AST_TYPE_CHAR: fprintf(stderr, "AST_TYPE_CHAR" ); break;
-		case AST_TYPE_INT: fprintf(stderr, "AST_TYPE_INT" ); break;
-		case AST_TYPE_FLOAT: fprintf(stderr, "AST_TYPE_FLOAT" ); break;
-		case AST_FUNCTION_DECLARATION: fprintf(stderr, "AST_FUNCTION_DECLARATION" ); break;
-		case AST_FUNCTION_HEAD: fprintf(stderr, "AST_FUNCTION_HEAD" ); break;
-		case AST_FUNCTION_PARAM: fprintf(stderr, "AST_FUNCTION_PARAM" ); break;
-		case AST_VARIABLE_DECLARATION: fprintf(stderr, "AST_VARIABLE_DECLARATION" ); break;
-		case AST_VECTOR_INITIALIZATION: fprintf(stderr, "AST_VECTOR_INITIALIZATION" ); break;
-		case AST_VARIABLE_DECLARATION_VECTOR: fprintf(stderr, "AST_VARIABLE_DECLARATION_VECTOR" ); break;
-		case AST_ELEMENT: fprintf(stderr, "AST_ELEMENT" ); break;
+		case AST_LITERAL: fprintf(stderr, "AST_LITERAL \n " ); break;
+		case AST_OPERATOR_ADD: fprintf(stderr, "AST_ADD \n " ); break;
+		case AST_OPERATOR_MUL: fprintf(stderr, "AST_MUL \n " ); break;
+		case AST_OPERATOR_SUB: fprintf(stderr, "AST_SUB \n " ); break;
+		case AST_OPERATOR_DIV: fprintf(stderr, "AST_DIV \n " ); break;
+		case AST_OPERATOR_LE: fprintf(stderr, "AST_OPERATOR_LE \n " ); break;
+		case AST_OPERATOR_GE: fprintf(stderr, "AST_OPERATOR_GE \n " ); break;
+		case AST_OPERATOR_EQ: fprintf(stderr, "AST_OPERATOR_EQ \n " ); break;
+		case AST_OPERATOR_L: fprintf(stderr, "AST_OPERATOR_L \n " ); break;
+		case AST_OPERATOR_G: fprintf(stderr, "AST_OPERATOR_G \n " ); break;
+		case AST_OPERATOR_OR: fprintf(stderr, "AST_OPERATOR_OR \n " ); break;
+		case AST_OPERATOR_AND: fprintf(stderr, "AST_OPERATOR_AND \n " ); break;
+		case AST_OPERATOR_NOT: fprintf(stderr, "AST_OPERATOR_NOT \n " ); break;
+		case AST_VECTOR: fprintf(stderr, "AST_VECTOR \n " ); break;
+		case AST_FUNCTION: fprintf(stderr, "AST_FUNCTION \n " ); break;
+		case AST_PARAMETER: fprintf(stderr, "AST_PARAMETER \n " ); break;
+		case AST_IF: fprintf(stderr, "AST_IF \n " ); break;
+		case AST_THEN: fprintf(stderr, "AST_THEN \n " ); break;
+		case AST_ELSE: fprintf(stderr, "AST_ELSE \n " ); break;
+		case AST_WHILE: fprintf(stderr, "AST_WHILE \n " ); break;
+		case AST_READ: fprintf(stderr, "AST_READ \n " ); break;
+		case AST_PRINT: fprintf(stderr, "AST_PRINT \n " ); break;
+		case AST_PRINT_STRING: fprintf(stderr, "AST_PRINT_STRING \n " ); break;
+		case AST_PRINT_EXPRESSION: fprintf(stderr, "AST_PRINT_EXPRESSION \n " ); break;
+		case AST_BLOCK: fprintf(stderr, "AST_BLOCK \n " ); break;
+		case AST_RETURN: fprintf(stderr, "AST_RETURN \n " ); break;
+		case AST_COMMAND: fprintf(stderr, "AST_COMMAND \n " ); break;
+		case AST_ATTRIBUATION: fprintf(stderr, "AST_ATTRIBUATION \n " ); break;
+		case AST_ATTRIBUATION_VECTOR: fprintf(stderr, "AST_ATTRIBUATION_VECTOR \n " ); break;
+		case AST_TYPE_CHAR: fprintf(stderr, "AST_TYPE_CHAR \n " ); break;
+		case AST_TYPE_INT: fprintf(stderr, "AST_TYPE_INT \n " ); break;
+		case AST_TYPE_FLOAT: fprintf(stderr, "AST_TYPE_FLOAT \n " ); break;
+		case AST_FUNCTION_DECLARATION: fprintf(stderr, "AST_FUNCTION_DECLARATION \n " ); break;
+		case AST_FUNCTION_HEAD: fprintf(stderr, "AST_FUNCTION_HEAD \n " ); break;
+		case AST_FUNCTION_PARAM: fprintf(stderr, "AST_FUNCTION_PARAM \n " ); break;
+		case AST_VARIABLE_DECLARATION: fprintf(stderr, "AST_VARIABLE_DECLARATION \n " ); break;
+		case AST_VECTOR_INITIALIZATION: fprintf(stderr, "AST_VECTOR_INITIALIZATION \n " ); break;
+		case AST_VARIABLE_DECLARATION_VECTOR: fprintf(stderr, "AST_VARIABLE_DECLARATION_VECTOR \n " ); break;
+		case AST_ELEMENT: fprintf(stderr, "AST_ELEMENT \n " ); break;
 		default: fprintf(stderr, "UNKNOWN, %d", node->type ); break;
 
 	}
@@ -155,11 +154,13 @@ void printPogramToFile(AST* node, FILE* outputFile){
 			writeStringOnFile(" or ", outputFile); 
 			printPogramToFile(node->son[1],outputFile);
 			break;
+
 		case AST_OPERATOR_AND: 
 			printPogramToFile(node->son[0],outputFile);
 			writeStringOnFile(" and ", outputFile); 
 			printPogramToFile(node->son[1],outputFile);
 			break;
+
 		case AST_OPERATOR_NOT:
 			writeStringOnFile(" not ", outputFile); 
 			printPogramToFile(node->son[0],outputFile);
@@ -171,31 +172,97 @@ void printPogramToFile(AST* node, FILE* outputFile){
 			printPogramToFile(node->son[0],outputFile);
 			writeStringOnFile("p", outputFile); 
 			break; 
-		case AST_FUNCTION: fprintf(stderr, "AST_FUNCTION" ); break;
-		case AST_PARAMETER: fprintf(stderr, "AST_PARAMETER" ); break;
-		case AST_IF: fprintf(stderr, "AST_IF" ); break;
-		case AST_THEN: fprintf(stderr, "AST_THEN" ); break;
-		case AST_ELSE: fprintf(stderr, "AST_ELSE" ); break;
-		case AST_WHILE: fprintf(stderr, "AST_WHILE" ); break;
-		case AST_READ: fprintf(stderr, "AST_READ" ); break;
-		case AST_ITEM_PRINT: fprintf(stderr, "AST_ITEM_PRINT" ); break;
-		case AST_PRINT: fprintf(stderr, "AST_PRINT" ); break;
-		case AST_PRINT_STRING: fprintf(stderr, "AST_PRINT_STRING" ); break;
-		case AST_PRINT_EXPRESSION: fprintf(stderr, "AST_PRINT_EXPRESSION" ); break;
+		case AST_FUNCTION: 
+			writeStringOnFile(node->symbol->value, outputFile); 
+			writeStringOnFile("d", outputFile); 
+			printPogramToFile(node->son[0],outputFile);
+			writeStringOnFile("b", outputFile);
+			break;
+
+		case AST_PARAMETER: 
+			printPogramToFile(node->son[0],outputFile);
+			if(node->son[1] != 0){ 
+				writeStringOnFile(", ", outputFile);
+				printPogramToFile(node->son[1],outputFile);
+			}
+			break;
+		case AST_IF: 
+			writeStringOnFile("if ",outputFile);
+			printPogramToFile(node->son[0],outputFile);			
+			printPogramToFile(node->son[1],outputFile);			
+			break;
+		case AST_THEN:
+			writeStringOnFile(" then ",outputFile);
+			printPogramToFile(node->son[0],outputFile);
+			printPogramToFile(node->son[1],outputFile);
+			break;
+		case AST_ELSE: 
+			writeStringOnFile(" else ",outputFile);
+			printPogramToFile(node->son[0],outputFile);
+			break;
+
+		case AST_WHILE: 
+			writeStringOnFile("while ",outputFile);
+			printPogramToFile(node->son[0],outputFile);
+			writeStringOnFile(" ",outputFile);
+			printPogramToFile(node->son[1],outputFile);
+
+			break;
+		case AST_READ: 
+			writeStringOnFile("read ",outputFile);
+			writeStringOnFile(node->symbol->value,outputFile);
+			break;
+		case AST_PRINT: 
+			writeStringOnFile("print ", outputFile);
+			printPogramToFile(node->son[0],outputFile);
+			break;
+
+		case AST_PRINT_STRING: 
+			writeStringOnFile(node->symbol->value, outputFile);
+			if(node->son[0] != 0){
+				writeStringOnFile(", ", outputFile);
+				printPogramToFile(node->son[0],outputFile);
+				}
+			break;
+
+		case AST_PRINT_EXPRESSION:
+			printPogramToFile(node->son[0],outputFile);
+			if(node->son[1] != 0){
+				writeStringOnFile(", ", outputFile);
+				printPogramToFile(node->son[1],outputFile);
+				
+			}
+			break;
 		case AST_BLOCK: 
 			writeStringOnFile("{\n", outputFile);
 			printPogramToFile(node->son[0],outputFile);
 			writeStringOnFile("}\n", outputFile);
-
 			break;
-		case AST_RETURN: fprintf(stderr, "AST_RETURN" ); break;
-		case AST_COMMAND: 
+
+		case AST_RETURN: 
+			writeStringOnFile("return ",outputFile);
 			printPogramToFile(node->son[0],outputFile);
 			break;
-		case AST_ATTRIBUATION: 
-		fprintf(stderr, "AST_ATTRIBUATION" );
-		break;
-		case AST_ATTRIBUATION_VECTOR: fprintf(stderr, "AST_ATTRIBUATION_VECTOR" ); break;
+			
+		case AST_COMMAND: 
+			printPogramToFile(node->son[0],outputFile);
+			writeStringOnFile(";\n", outputFile);
+			printPogramToFile(node->son[1],outputFile);
+
+			break;
+		case AST_ATTRIBUATION:
+			writeStringOnFile(node->symbol->value, outputFile);
+			writeStringOnFile(" = ", outputFile);
+			printPogramToFile(node->son[0],outputFile);
+		
+			break;
+		case AST_ATTRIBUATION_VECTOR: 
+			writeStringOnFile(node->symbol->value, outputFile);
+			writeStringOnFile(" q", outputFile);
+			printPogramToFile(node->son[0],outputFile);
+			writeStringOnFile("p = ", outputFile);
+			printPogramToFile(node->son[1],outputFile);
+			break;
 		
 		case AST_TYPE_CHAR: 
 			writeStringOnFile(" char ", outputFile);
@@ -246,9 +313,9 @@ void printPogramToFile(AST* node, FILE* outputFile){
 		case AST_VARIABLE_DECLARATION_VECTOR: 
 			printPogramToFile(node->son[0],outputFile);
 			writeStringOnFile(node->symbol->value, outputFile );
-			writeStringOnFile(" q ", outputFile );
+			writeStringOnFile(" q", outputFile );
 			printPogramToFile(node->son[1],outputFile);
-			writeStringOnFile(" p ", outputFile );
+			writeStringOnFile("p ", outputFile );
 			
 			if(node->son[2] != 0){
 				writeStringOnFile(" : ", outputFile );

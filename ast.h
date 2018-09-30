@@ -24,7 +24,6 @@
 #define AST_ELSE 19
 #define AST_WHILE 20
 #define AST_READ 21
-#define AST_ITEM_PRINT 22
 #define AST_PRINT 23
 #define AST_PRINT 23
 #define AST_PRINT_STRING 24

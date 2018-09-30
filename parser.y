@@ -100,8 +100,8 @@ expression: literal
         | expression '/' expression             { $$ = astCreate(AST_OPERATOR_DIV, 0,$1,$3,0,0);}
         | expression OPERATOR_LE expression     { $$ = astCreate(AST_OPERATOR_LE, 0,$1,$3,0,0); }
         | expression OPERATOR_GE expression     { $$ = astCreate(AST_OPERATOR_GE, 0,$1,$3,0,0); }
-        | expression '>' expression             { $$ = astCreate(AST_OPERATOR_L, 0,$1,$3,0,0);  }
-        | expression '<' expression             { $$ = astCreate(AST_OPERATOR_G, 0,$1,$3,0,0);  }  
+        | expression '>' expression             { $$ = astCreate(AST_OPERATOR_G, 0,$1,$3,0,0);  }
+        | expression '<' expression             { $$ = astCreate(AST_OPERATOR_L, 0,$1,$3,0,0);  }  
         | expression OPERATOR_EQ expression     { $$ = astCreate(AST_OPERATOR_EQ, 0,$1,$3,0,0); }
         | expression OPERATOR_OR expression     { $$ = astCreate(AST_OPERATOR_OR, 0,$1,$3,0,0); }
         | expression OPERATOR_AND expression    { $$ = astCreate(AST_OPERATOR_AND, 0,$1,$3,0,0);}
@@ -174,7 +174,7 @@ printItems: LIT_STRING ',' printItems {$$ = astCreate(AST_PRINT_STRING, $1, $3,0
 return: KW_RETURN expression {$$ = astCreate(AST_RETURN, 0, $2,0,0,0);}
         ;
 
-fluxControl: KW_IF expression KW_THEN command KW_ELSE command {$$ = astCreate(AST_IF, 0,$2,astCreate(AST_THEN, 0,$4,0,0,0),astCreate(AST_ELSE, 0,$6,0,0,0),0);}
+fluxControl: KW_IF expression KW_THEN command KW_ELSE command {$$ = astCreate(AST_IF, 0,$2,astCreate(AST_THEN, 0,$4,astCreate(AST_ELSE, 0,$6,0,0,0),0,0),0,0);}
             | KW_IF expression KW_THEN command                {$$ = astCreate(AST_IF, 0,$2,astCreate(AST_THEN, 0,$4,0,0,0),0,0);}
             | KW_WHILE expression command                     {$$ = astCreate(AST_WHILE, 0,$2,$3,0,0);}
             ;
