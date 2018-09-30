@@ -4,6 +4,7 @@
     #include "ast.h"   
     #include "hash.h"   
     #include "util.h"   
+    AST* programNode;
 %}
 
 
@@ -47,33 +48,41 @@
 %type<ast> printItems
 %type<ast> parametersDeclarationAux
 %type<ast> functionDeclaration
+%type<ast> arrayInitialization
+%type<ast> variablelDeclaration
 %type<ast> parametersDeclaration
 %type<ast> head
 %type<ast> body
 %type<ast> type
+%type<ast> element
 
 %left '<' '>'
 %left '+' '-'
 %left '*' '/'
 %left OPERATOR_AND OPERATOR_OR
 %left OPERATOR_NOT
-%left OPERATOR_LE OPERATOR_GE OPERATOR_E
+%left OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_L OPERATOR_G
 
 %union { struct hashItem  *symbol; struct ast_node* ast;}
 %%
 
-program: element 
+program: element {programNode=$1;} 
+    ;
+
+element: variablelDeclaration element { $$ = astCreate(AST_ELEMENT, 0,$1,$2,0,0);      }
+        | functionDeclaration element { $$ = astCreate(AST_ELEMENT, 0,$1,$2,0,0);      }
+        | {$$=0;}
         ;
 
-element: variablelDeclaration element
-        | functionDeclaration element {astPrint($1,0);}
-        |
-        ;
-
-variablelDeclaration: type TK_IDENTIFIER '=' expression ';'              {astPrint($4, 0);}
-                    | type TK_IDENTIFIER 'q' LIT_INTEGER 'p' ';'
-                    | type TK_IDENTIFIER 'q' LIT_INTEGER 'p' ':' arrayInitialization ';'
+variablelDeclaration: type TK_IDENTIFIER '=' expression ';'                                 { $$ = astCreate(AST_VARIABLE_DECLARATION, $2,$1,$4,0,0);      }
+                    | type TK_IDENTIFIER 'q' LIT_INTEGER 'p' ';'                            { $$ = astCreate(AST_VARIABLE_DECLARATION_VECTOR, $2,$1,astCreate(AST_LITERAL, $4,0,0,0,0),0,0);      }
+                    | type TK_IDENTIFIER 'q' LIT_INTEGER 'p' ':' arrayInitialization ';'    { $$ = astCreate(AST_VARIABLE_DECLARATION_VECTOR, $2,$1,astCreate(AST_LITERAL, $4,0,0,0,0),$7,0);      }
                     ;
+
+arrayInitialization: literal arrayInitialization { $$ = astCreate(AST_VECTOR_INITIALIZATION, 0,$1,$2,0,0); }
+                    | literal { $$ = astCreate(AST_VECTOR_INITIALIZATION, 0,$1,0,0,0); }
+                    ;
+
 
 type: KW_CHAR   { $$ = astCreate(AST_TYPE_CHAR, 0,0,0,0,0);}
     | KW_INT    { $$ = astCreate(AST_TYPE_INT, 0,0,0,0,0);}
@@ -82,7 +91,7 @@ type: KW_CHAR   { $$ = astCreate(AST_TYPE_CHAR, 0,0,0,0,0);}
 
 expression: literal 
         | TK_IDENTIFIER                         { $$ = astCreate(AST_LITERAL, $1,0,0,0,0);      }
-        | TK_IDENTIFIER 'q' expression 'p'      { $$ = astCreate(AST_ARRAY, $1,$3,0,0,0);       }
+        | TK_IDENTIFIER 'q' expression 'p'      { $$ = astCreate(AST_VECTOR, $1,$3,0,0,0);       }
         | TK_IDENTIFIER 'd' parameters 'b'      { $$ = astCreate(AST_FUNCTION, $1,$3,0,0,0);    }
         | TK_IDENTIFIER 'd' 'b'                 { $$ = astCreate(AST_FUNCTION, $1,0,0,0,0);     }
         | expression '+' expression             { $$ = astCreate(AST_OPERATOR_ADD, 0,$1,$3,0,0);}
@@ -111,9 +120,6 @@ literal: LIT_CHAR       { $$ = astCreate(AST_LITERAL, $1,0,0,0,0);}
         | LIT_INTEGER   { $$ = astCreate(AST_LITERAL, $1,0,0,0,0);}
         ;
 
-arrayInitialization: literal arrayInitialization 
-                    |
-                    ;
 
 functionDeclaration: head body {$$ = astCreate(AST_FUNCTION_DECLARATION, 0,$1,$2,0,0);}
                     ;

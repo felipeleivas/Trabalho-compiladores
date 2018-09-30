@@ -2,8 +2,10 @@
 #include "util.h"
 #include "hash.h"
 #include "y.tab.h"
+#include "ast.h"
 
 extern HASH_TABLE *hashTable;
+extern AST *programNode;
 
 int main( int argc, char **argv)
 {
@@ -16,5 +18,6 @@ int main( int argc, char **argv)
     initMe();
 
     yyparse();
+    astPrint(programNode,0);
     exit(0);
 }

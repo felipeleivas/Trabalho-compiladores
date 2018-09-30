@@ -67,7 +67,8 @@ extern int yydebug;
     LIT_CHAR = 277,
     LIT_STRING = 278,
     TOKEN_ERROR = 279,
-    OPERATOR_E = 280
+    OPERATOR_L = 280,
+    OPERATOR_G = 281
   };
 #endif
 /* Tokens.  */
@@ -93,17 +94,18 @@ extern int yydebug;
 #define LIT_CHAR 277
 #define LIT_STRING 278
 #define TOKEN_ERROR 279
-#define OPERATOR_E 280
+#define OPERATOR_L 280
+#define OPERATOR_G 281
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 
 union YYSTYPE
 {
-#line 62 "parser.y" /* yacc.c:1909  */
+#line 66 "parser.y" /* yacc.c:1909  */
  struct hashItem  *symbol; struct ast_node* ast;
 
-#line 107 "y.tab.h" /* yacc.c:1909  */
+#line 109 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
