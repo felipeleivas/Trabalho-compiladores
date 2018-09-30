@@ -55,4 +55,6 @@ typedef struct ast_node{
 
 AST* astCreate(int type, HASH_ITEM* symbol,AST* son0, AST* son1, AST* son2, AST* son3);
 void astPrint(AST* node, int level);
+void writeStringOnFile(char* string, FILE* file);
+void printPogramToFile(AST* node, FILE* outputFile);
 #endif

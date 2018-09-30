@@ -124,8 +124,8 @@ literal: LIT_CHAR       { $$ = astCreate(AST_LITERAL, $1,0,0,0,0);}
 functionDeclaration: head body {$$ = astCreate(AST_FUNCTION_DECLARATION, 0,$1,$2,0,0);}
                     ;
 
-head: type TK_IDENTIFIER 'd' parametersDeclaration 'b' {$$ = astCreate(AST_FUNCTION_HEAD, $2,$4,0,0,0);}
-    | type TK_IDENTIFIER 'd' 'b' {$$ = astCreate(AST_FUNCTION_HEAD, $2,0,0,0,0);}
+head: type TK_IDENTIFIER 'd' parametersDeclaration 'b' {$$ = astCreate(AST_FUNCTION_HEAD, $2,$1,$4,0,0);}
+    | type TK_IDENTIFIER 'd' 'b' {$$ = astCreate(AST_FUNCTION_HEAD, $2,$1,0,0,0);}
     ;
 
 parametersDeclaration: type TK_IDENTIFIER parametersDeclarationAux {$$ = astCreate(AST_FUNCTION_PARAM, $2,$1,$3,0,0);}
