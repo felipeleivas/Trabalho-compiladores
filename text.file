@@ -15,7 +15,6 @@ int main db
   print vqap;
   
   print "Digite um numero: \n";   
-  read a;
   while i<10
     {
     i = incndi,1b;
@@ -35,9 +34,5 @@ int main db
   ;;;
   {;};
   {};
-  }
-
-int incn d int x, int n b
-  {
-  return x+n;
+  read a;
   }

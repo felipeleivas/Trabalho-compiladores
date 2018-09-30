@@ -50,7 +50,12 @@ void astPrint(AST* node,int level){
 		case AST_THEN: fprintf(stderr, "AST_THEN" ); break;
 		case AST_ELSE: fprintf(stderr, "AST_ELSE" ); break;
 		case AST_WHILE: fprintf(stderr, "AST_WHILE" ); break;
-		default: fprintf(stderr, "UNKNOWN" ); break;
+		case AST_READ: fprintf(stderr, "AST_READ" ); break;
+		case AST_ITEM_PRINT: fprintf(stderr, "AST_ITEM_PRINT" ); break;
+		case AST_PRINT: fprintf(stderr, "AST_PRINT" ); break;
+		case AST_PRINT_STRING: fprintf(stderr, "AST_PRINT_STRING" ); break;
+		case AST_PRINT_EXPRESSION: fprintf(stderr, "AST_PRINT_EXPRESSION" ); break;
+		default: fprintf(stderr, "UNKNOWN, %d", node->type ); break;
 
 	}
 	if(node->symbol != 0){

@@ -113,15 +113,15 @@ void printHashTable(HASH_TABLE* hashTable) {
         hashItem = hashTable->items[i];
         while(hashItem != NULL) {
             if(hashItem->type == SYMBOL_LIT_INT)
-                printf(" >>Item:\n   -key: %s\n   -value: %s\n   -type: SYMBOL_LIT_INT\n", hashItem->key, hashItem->value, hashItem->type);
+                printf(" >>Item:\n   -key: %s\n   -value: %s\n   -type: SYMBOL_LIT_INT\n", hashItem->key, hashItem->value);
             if(hashItem->type == SYMBOL_LIT_FLOAT)
-                printf(" >>Item:\n   -key: %s\n   -value: %s\n   -type: SYMBOL_LIT_FLOAT\n", hashItem->key, hashItem->value, hashItem->type);
+                printf(" >>Item:\n   -key: %s\n   -value: %s\n   -type: SYMBOL_LIT_FLOAT\n", hashItem->key, hashItem->value);
             if(hashItem->type == SYMBOL_LIT_STRING)
-                printf(" >>Item:\n   -key: %s\n   -value: %s\n   -type: SYMBOL_LIT_STRING\n", hashItem->key, hashItem->value, hashItem->type);
+                printf(" >>Item:\n   -key: %s\n   -value: %s\n   -type: SYMBOL_LIT_STRING\n", hashItem->key, hashItem->value);
             if(hashItem->type == SYMBOL_LIT_CHAR)
-                printf(" >>Item:\n   -key: %s\n   -value: %s\n   -type: SYMBOL_LIT_CHAR\n", hashItem->key, hashItem->value, hashItem->type);
+                printf(" >>Item:\n   -key: %s\n   -value: %s\n   -type: SYMBOL_LIT_CHAR\n", hashItem->key, hashItem->value);
             if(hashItem->type == SYMBOL_TK_IDENTIFIER)
-                printf(" >>Item:\n   -key: %s\n   -value: %s\n   -type: SYMBOL_TK_IDENTIFIER\n", hashItem->key, hashItem->value, hashItem->type);
+                printf(" >>Item:\n   -key: %s\n   -value: %s\n   -type: SYMBOL_TK_IDENTIFIER\n", hashItem->key, hashItem->value);
             hashItem = hashItem->next;
         }
     }
