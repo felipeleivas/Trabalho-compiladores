@@ -36,11 +36,21 @@
 %type<ast> expression
 %type<ast> literal
 %type<ast> parameters
+%type<ast> atribuation
 %type<ast> fluxControl
 %type<ast> command
+%type<ast> commandList
+%type<ast> block
 %type<ast> read
+%type<ast> return
 %type<ast> print
 %type<ast> printItems
+%type<ast> parametersDeclarationAux
+%type<ast> functionDeclaration
+%type<ast> parametersDeclaration
+%type<ast> head
+%type<ast> body
+%type<ast> type
 
 %left '<' '>'
 %left '+' '-'
@@ -56,7 +66,7 @@ program: element
         ;
 
 element: variablelDeclaration element
-        | functionDeclaration element
+        | functionDeclaration element {astPrint($1,0);}
         |
         ;
 
@@ -65,9 +75,9 @@ variablelDeclaration: type TK_IDENTIFIER '=' expression ';'              {astPri
                     | type TK_IDENTIFIER 'q' LIT_INTEGER 'p' ':' arrayInitialization ';'
                     ;
 
-type: KW_CHAR
-    | KW_INT
-    | KW_FLOAT
+type: KW_CHAR   { $$ = astCreate(AST_TYPE_CHAR, 0,0,0,0,0);}
+    | KW_INT    { $$ = astCreate(AST_TYPE_INT, 0,0,0,0,0);}
+    | KW_FLOAT  { $$ = astCreate(AST_TYPE_FLOAT, 0,0,0,0,0);}
     ;
 
 expression: literal 
@@ -101,50 +111,49 @@ literal: LIT_CHAR       { $$ = astCreate(AST_LITERAL, $1,0,0,0,0);}
         | LIT_INTEGER   { $$ = astCreate(AST_LITERAL, $1,0,0,0,0);}
         ;
 
-arrayInitialization: literal arrayInitialization
+arrayInitialization: literal arrayInitialization 
                     |
                     ;
 
-functionDeclaration: head body
+functionDeclaration: head body {$$ = astCreate(AST_FUNCTION_DECLARATION, 0,$1,$2,0,0);}
                     ;
 
-head: type TK_IDENTIFIER 'd' parametersDeclaration 'b'
+head: type TK_IDENTIFIER 'd' parametersDeclaration 'b' {$$ = astCreate(AST_FUNCTION_HEAD, $2,$4,0,0,0);}
+    | type TK_IDENTIFIER 'd' 'b' {$$ = astCreate(AST_FUNCTION_HEAD, $2,0,0,0,0);}
     ;
 
-parametersDeclaration: type TK_IDENTIFIER parametersDeclarationAux
-            |
+parametersDeclaration: type TK_IDENTIFIER parametersDeclarationAux {$$ = astCreate(AST_FUNCTION_PARAM, $2,$1,$3,0,0);}
+
+parametersDeclarationAux: ',' type TK_IDENTIFIER parametersDeclarationAux {$$ = astCreate(AST_FUNCTION_PARAM, $3,$2,$4,0,0);}
+            | ',' type TK_IDENTIFIER {$$ = astCreate(AST_FUNCTION_PARAM, $3,$2,0,0,0);} 
             ;
 
-parametersDeclarationAux: ',' type TK_IDENTIFIER parametersDeclarationAux
-            |
-            ;
-
-body: block
+body: block {$$ = $1;}
     ;
 
-block: '{' commandList '}'
-    | '{' '}'
+block: '{' commandList '}' {$$ = astCreate(AST_BLOCK, 0, $2,0,0,0);}
+    | '{' '}'              {$$ = astCreate(AST_BLOCK, 0, 0,0,0,0);}
     ;
 
-commandList: command ';' commandList {astPrint($1,0);}
-            | command ';' {astPrint($1,0);}
-            | ';' commandList 
-            | ';' 
+commandList: command ';' commandList {$$ = astCreate(AST_COMMAND, 0, $1,$3,0,0);}
+            | command ';' {$$ = astCreate(AST_COMMAND, 0, $1,0,0,0);}
+            | ';' commandList {$$ = astCreate(AST_COMMAND, 0, $2,0,0,0);}
+            | ';' {$$ = astCreate(AST_COMMAND, 0, 0,0,0,0);}
             ;
 
-command: atribuation    {$$ = 0;}
+command: atribuation    {$$ = $1;}
         | read          {$$ = $1;}
         | print         {$$ = $1;}
         | fluxControl   {$$ = $1;}
-        | return        {$$ = 0;}
-        | block         {$$ = 0;}
+        | return        {$$ = $1;}
+        | block         {$$ = $1;}
         ;
 
-atribuation: TK_IDENTIFIER '=' expression
-            | TK_IDENTIFIER 'q' expression 'p' '=' expression
+atribuation: TK_IDENTIFIER '=' expression { $$ = astCreate(AST_ATTRIBUATION, $1,$3,0,0,0);}
+            | TK_IDENTIFIER 'q' expression 'p' '=' expression { $$ = astCreate(AST_ATTRIBUATION_VECTOR, $1,$3,$6,0,0);}
             ;
 
-read: KW_READ TK_IDENTIFIER { $$ = astCreate(AST_READ, $2,0,0,0,0);      }
+read: KW_READ TK_IDENTIFIER { $$ = astCreate(AST_READ, $2,0,0,0,0);}
     ;
 
 print: KW_PRINT printItems { $$ = astCreate(AST_PRINT, 0,$2,0,0,0);}
@@ -155,7 +164,8 @@ printItems: LIT_STRING ',' printItems {$$ = astCreate(AST_PRINT_STRING, $1, $3,0
            | LIT_STRING {$$ = astCreate(AST_PRINT_STRING, $1, 0,0,0,0);}
            | expression {$$ = astCreate(AST_PRINT_EXPRESSION, 0,$1,0,0,0);}
            ;
-return: KW_RETURN expression
+
+return: KW_RETURN expression {$$ = astCreate(AST_RETURN, 0, $2,0,0,0);}
         ;
 
 fluxControl: KW_IF expression KW_THEN command KW_ELSE command {$$ = astCreate(AST_IF, 0,$2,astCreate(AST_THEN, 0,$4,0,0,0),astCreate(AST_ELSE, 0,$6,0,0,0),0);}

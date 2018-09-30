@@ -55,6 +55,17 @@ void astPrint(AST* node,int level){
 		case AST_PRINT: fprintf(stderr, "AST_PRINT" ); break;
 		case AST_PRINT_STRING: fprintf(stderr, "AST_PRINT_STRING" ); break;
 		case AST_PRINT_EXPRESSION: fprintf(stderr, "AST_PRINT_EXPRESSION" ); break;
+		case AST_BLOCK: fprintf(stderr, "AST_BLOCK" ); break;
+		case AST_RETURN: fprintf(stderr, "AST_RETURN" ); break;
+		case AST_COMMAND: fprintf(stderr, "AST_COMMAND" ); break;
+		case AST_ATTRIBUATION: fprintf(stderr, "AST_ATTRIBUATION" ); break;
+		case AST_ATTRIBUATION_VECTOR: fprintf(stderr, "AST_ATTRIBUATION_VECTOR" ); break;
+		case AST_TYPE_CHAR: fprintf(stderr, "AST_TYPE_CHAR" ); break;
+		case AST_TYPE_INT: fprintf(stderr, "AST_TYPE_INT" ); break;
+		case AST_TYPE_FLOAT: fprintf(stderr, "AST_TYPE_FLOAT" ); break;
+		case AST_FUNCTION_DECLARATION: fprintf(stderr, "AST_FUNCTION_DECLARATION" ); break;
+		case AST_FUNCTION_HEAD: fprintf(stderr, "AST_FUNCTION_HEAD" ); break;
+		case AST_FUNCTION_PARAM: fprintf(stderr, "AST_FUNCTION_PARAM" ); break;
 		default: fprintf(stderr, "UNKNOWN, %d", node->type ); break;
 
 	}

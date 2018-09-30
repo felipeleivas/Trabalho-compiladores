@@ -29,6 +29,18 @@
 #define AST_PRINT 23
 #define AST_PRINT_STRING 24
 #define AST_PRINT_EXPRESSION 25
+#define AST_RETURN 26
+#define AST_BLOCK 27
+#define AST_COMMAND 28
+#define AST_ATTRIBUATION 29
+#define AST_ATTRIBUATION_VECTOR 30
+#define AST_TYPE_CHAR 31
+#define AST_TYPE_INT 32
+#define AST_TYPE_FLOAT 33
+#define AST_FUNCTION_DECLARATION 34
+#define AST_FUNCTION_HEAD 35
+#define AST_FUNCTION_PARAM 36
+
 #include "hash.h"
 
 typedef struct ast_node{
