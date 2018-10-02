@@ -46,7 +46,6 @@
 %type<ast> return
 %type<ast> print
 %type<ast> printItems
-%type<ast> parametersDeclarationAux
 %type<ast> functionDeclaration
 %type<ast> arrayInitialization
 %type<ast> variablelDeclaration
@@ -128,10 +127,10 @@ head: type TK_IDENTIFIER 'd' parametersDeclaration 'b' {$$ = astCreate(AST_FUNCT
     | type TK_IDENTIFIER 'd' 'b' {$$ = astCreate(AST_FUNCTION_HEAD, $2,$1,0,0,0);}
     ;
 
-parametersDeclaration: type TK_IDENTIFIER parametersDeclarationAux {$$ = astCreate(AST_FUNCTION_PARAM, $2,$1,$3,0,0);}
-
-parametersDeclarationAux: ',' type TK_IDENTIFIER parametersDeclarationAux {$$ = astCreate(AST_FUNCTION_PARAM, $3,$2,$4,0,0);}
+parametersDeclaration: type TK_IDENTIFIER parametersDeclaration {$$ = astCreate(AST_FUNCTION_PARAM, $2,$1,$3,0,0);}
+            | ',' type TK_IDENTIFIER parametersDeclaration {$$ = astCreate(AST_FUNCTION_PARAM, $3,$2,$4,0,0);}
             | ',' type TK_IDENTIFIER {$$ = astCreate(AST_FUNCTION_PARAM, $3,$2,0,0,0);} 
+            | type TK_IDENTIFIER {$$ = astCreate(AST_FUNCTION_PARAM, $2,$1,0,0,0);}
             ;
 
 body: block {$$ = $1;}
