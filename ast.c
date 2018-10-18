@@ -69,6 +69,7 @@ void astPrint(AST* node,int level){
 		case AST_VECTOR_INITIALIZATION: fprintf(stderr, "AST_VECTOR_INITIALIZATION \n " ); break;
 		case AST_VARIABLE_DECLARATION_VECTOR: fprintf(stderr, "AST_VARIABLE_DECLARATION_VECTOR \n " ); break;
 		case AST_ELEMENT: fprintf(stderr, "AST_ELEMENT \n " ); break;
+		case AST_IDENTIFIER: fprintf(stderr, "AST_IDENTIFIER \n " ); break;
 		default: fprintf(stderr, "UNKNOWN, %d", node->type ); break;
 
 	}
@@ -99,6 +100,7 @@ void printPogramToFile(AST* node, FILE* outputFile){
 		return;
 	}
 	switch(node->type){
+		case AST_IDENTIFIER:
 		case AST_LITERAL: 
 			writeStringOnFile(node->symbol->value, outputFile); 
 			break;

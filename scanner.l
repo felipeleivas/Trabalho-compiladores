@@ -51,10 +51,8 @@
 
 %%
 
-int hashTableSize = 7;
-
 void initMe(void){
-	hashTable = createHashTable(hashTableSize);
+	hashTable = createHashTable(HASH_SIZE);
 }
 
 int isRunning(void){

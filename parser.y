@@ -3,6 +3,7 @@
     #include <stdlib.h> 
     #include "ast.h"   
     #include "hash.h"   
+    #include "semantic.h"   
     #include "util.h"   
     AST* programNode;
 %}
@@ -65,7 +66,11 @@
 %union { struct hashItem  *symbol; struct ast_node* ast;}
 %%
 
-program: element {programNode=$1;} 
+program: element {
+                    astPrint($1,0);
+                    setDeclaration($1);
+                    checkUndeclared();
+                    } 
     ;
 
 element: variablelDeclaration element { $$ = astCreate(AST_ELEMENT, 0,$1,$2,0,0);      }
@@ -89,7 +94,7 @@ type: KW_CHAR   { $$ = astCreate(AST_TYPE_CHAR, 0,0,0,0,0);}
     ;
 
 expression: literal 
-        | TK_IDENTIFIER                         { $$ = astCreate(AST_LITERAL, $1,0,0,0,0);      }
+        | TK_IDENTIFIER                         { $$ = astCreate(AST_IDENTIFIER, $1,0,0,0,0);      }
         | TK_IDENTIFIER 'q' expression 'p'      { $$ = astCreate(AST_VECTOR, $1,$3,0,0,0);       }
         | TK_IDENTIFIER 'd' parameters 'b'      { $$ = astCreate(AST_FUNCTION, $1,$3,0,0,0);    }
         | TK_IDENTIFIER 'd' 'b'                 { $$ = astCreate(AST_FUNCTION, $1,0,0,0,0);     }

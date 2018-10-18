@@ -18,8 +18,9 @@ int main( int argc, char **argv)
     initMe();
 
     yyparse();
-    FILE *p = fopen(argv[1],"w");
-	printPogramToFile(programNode,p);	
-	fclose(p);
+    // FILE *p = fopen(argv[1],"w");
+	// printPogramToFile(programNode,p);	
+	// fclose(p);
+    checkUndeclaredHash(hashTable);
     exit(0);
 }

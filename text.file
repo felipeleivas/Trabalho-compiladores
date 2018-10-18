@@ -10,6 +10,7 @@ char x = 65;
 
 int main db
   {
+  jjjjjjjj = 1;
   a = 7 - 8;
   v qap = 90;
   print vqap;

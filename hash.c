@@ -126,3 +126,18 @@ void printHashTable(HASH_TABLE* hashTable) {
         }
     }
 }
+
+
+void checkUndeclaredHash(HASH_TABLE* hashTable) {
+    HASH_ITEM *item;
+
+    int i;
+    for (int i = 0; i < HASH_SIZE; ++i)
+    {
+        for(item = hashTable->items[i];  item; item = item->next) {
+            if(item->type == TK_IDENTIFIER) {
+                fprintf(stderr, "Undeclared symbol %s in hash\n", item->value);
+            }
+        }
+    }
+}

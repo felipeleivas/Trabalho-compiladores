@@ -102,7 +102,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 65 "parser.y" /* yacc.c:1909  */
+#line 66 "parser.y" /* yacc.c:1909  */
  struct hashItem  *symbol; struct ast_node* ast;
 
 #line 109 "y.tab.h" /* yacc.c:1909  */
