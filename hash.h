@@ -7,11 +7,12 @@
 #include "y.tab.h"
 
 #define HASH_SIZE 997
-
+#define DATATYPE_MAX 10
 struct hashItem {
     char *value;
     char *key;
     int type;
+    int dataType[DATATYPE_MAX];
     struct hashItem *next;
 };
 typedef struct hashItem HASH_ITEM;

@@ -10,7 +10,7 @@ void setDeclaration(AST* node);
 void checkUndeclared();
 int isRedeclared(AST* node);
 void handleRedeclared(AST* node);
-
+int findTypeByAstNode(AST* node);
 
 
 #endif

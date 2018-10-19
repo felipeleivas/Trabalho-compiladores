@@ -20,12 +20,8 @@ void setDeclaration(AST* root) {
 					handleRedeclared(dec);
 				}				
 				dec->symbol->type = SYMBOL_VARIABLE;
-				switch(dec->son[0]->type){
-					case AST_TYPE_CHAR: 
-					case AST_TYPE_INT: dec->dataType = DATATYPE_INT; break;
-					case AST_TYPE_FLOAT: dec->dataType = DATATYPE_FLOAT; break;
-					default: fprintf(stderr, "Type unknow of token %s\n",dec->symbol->value);
-				}
+				dec->dataType = findTypeByAstNode(dec->son[0]);
+				dec->symbol->dataType[0] = findTypeByAstNode(dec->son[0]);
 				if(dec->son[1] && dec->dataType != dec->son[1]->dataType)
 					handleMissMatchingOfType(dec);
 				break;
@@ -37,16 +33,11 @@ void setDeclaration(AST* root) {
 					handleRedeclared(dec);
 				}
 				dec->symbol->type = SYMBOL_VECTOR;
-				switch(dec->son[0]->type){
-					case AST_TYPE_CHAR: 
-					case AST_TYPE_INT: dec->dataType = DATATYPE_INT; break;
-					case AST_TYPE_FLOAT: dec->dataType = DATATYPE_FLOAT; break;
-					default: fprintf(stderr, "Type unknow of token %s\n",dec->symbol->value);
-				}
+				dec->dataType = findTypeByAstNode(dec->son[0]);
+				dec->symbol->dataType[0] = findTypeByAstNode(dec->son[0]);
 				if(dec->son[2]){
 					AST* arrayElement = dec->son[2];
 					for (; arrayElement != NULL; arrayElement = arrayElement->son[0]){
-						// fprintf(stderr,"ERR %s %d %s %d\n",dec->symbol->value,dec->dataType,arrayElement->symbol->value,arrayElement->dataType);
 						if(arrayElement->dataType != dec->dataType){
 							handleMissMatchingOfType(dec);
 						}
@@ -63,19 +54,35 @@ void setDeclaration(AST* root) {
 				}
 				functionHead->symbol->type = SYMBOL_FUNC;
 				
-				switch(functionType->type){
-					case AST_TYPE_CHAR: 
-					case AST_TYPE_INT: dec->son[0]->dataType = DATATYPE_INT; break;
-					case AST_TYPE_FLOAT: dec->son[0]->dataType = DATATYPE_FLOAT; break;
-					default: fprintf(stderr, "Type unknow of token %s\n",dec->symbol->value);
+				dec->son[0]->dataType = findTypeByAstNode(functionType);
+				dec->son[0]->symbol->dataType[0] = findTypeByAstNode(functionType);
 
+				
+				AST* params  = functionHead->son[1];
+				int index = 0;
+				for(; params != 0; params = params->son[1]){
+					params->symbol->type=SYMBOL_FUNC_PARAM;
+					params->dataType = findTypeByAstNode(params->son[0]);
+					params->symbol->dataType[index] = findTypeByAstNode(params->son[0]);
+					++index;
 				}
-				break;
 			}
-
+			case AST_PRINT_STRING:
+				dec->dataType = DATATYPE_STRING;
+				break;
 		}
 	}
 
+}
+
+int findTypeByAstNode(AST* node){
+	switch(node->type){
+		case AST_TYPE_CHAR: 
+		case AST_TYPE_INT: return DATATYPE_INT; 
+		case AST_TYPE_FLOAT: return DATATYPE_FLOAT;
+		default: fprintf(stderr, "Type unknow of token %s\n",node->symbol->value);
+	}
+	return (4);
 }
 
 int checkIfIsValueFromType(AST* node, int type){

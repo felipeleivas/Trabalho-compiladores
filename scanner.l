@@ -34,7 +34,7 @@
 "not"										{return OPERATOR_NOT;}
 "and"										{return OPERATOR_AND;}
 "or"										{return OPERATOR_OR;}
-\"(\\.|[^"])*\"								{yylval.symbol=pushItem(hashTable,yytext,yytext,LIT_STRING); return LIT_STRING;}
+\"(\\.|[^"])*\"								{return LIT_STRING;}
 ['][-a-zA-Z0-9][']                  	    {yylval.symbol=pushItem(hashTable,yytext,yytext,LIT_CHAR);  return LIT_CHAR;}
 [-|,|;|:|d|b|q|p|{|}|+|*|/|<|>|=|!|&|$|#] 	{return yytext[0];}
 [_ace-or-z0-9A-Z]*[_ace-or-zA-Z][_ace-or-z0-9A-Z]*	{yylval.symbol=pushItem(hashTable,yytext,yytext,TK_IDENTIFIER); return TK_IDENTIFIER;}
