@@ -45,11 +45,23 @@
 #define AST_ELEMENT 40
 #define AST_IDENTIFIER 41
 
+#define SYMBOL_FUNC 42
+#define SYMBOL_VECTOR 43
+#define SYMBOL_VARIABLE 44
+
+
+#define DATATYPE_FLOAT 255
+#define DATATYPE_FLOAT_VECTOR 256
+#define DATATYPE_INT 257
+#define DATATYPE_INT_VECTOR 258
+#define DATATYPE_STRING 261
+
 #include "hash.h"
 
 typedef struct ast_node{
 	int type;
 	struct ast_node* son[MAX_SONS];
+	int dataType;
 	HASH_ITEM* symbol;
 }AST;
 

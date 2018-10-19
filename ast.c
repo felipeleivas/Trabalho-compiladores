@@ -9,6 +9,16 @@ AST* astCreate(int type, HASH_ITEM* symbol, AST* son0, AST* son1, AST* son2, AST
 	newNode->son[1] = son1;
 	newNode->son[2] = son2;
 	newNode->son[3] = son3;
+	if(symbol)
+		switch(symbol->type){
+			case LIT_STRING: newNode->dataType = DATATYPE_STRING; break;
+			case LIT_FLOAT: newNode->dataType = DATATYPE_FLOAT; break;
+			case LIT_CHAR:
+			case LIT_INTEGER: newNode->dataType = DATATYPE_INT; break;
+			case TK_IDENTIFIER: break;
+			default: fprintf(stderr,"[ERROR] Unexpect type %d\n",type);
+		}
+
 
 	return newNode;
 }

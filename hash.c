@@ -84,7 +84,6 @@ HASH_ITEM* createItem(char* key, char* value, int type) {
     newItem->value = strdup(value);
     newItem->next = NULL;
     newItem->type = type;
-
     return newItem;
 }
 
