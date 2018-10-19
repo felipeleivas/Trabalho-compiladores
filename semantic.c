@@ -26,7 +26,6 @@ void setDeclaration(AST* root) {
 					case AST_TYPE_FLOAT: dec->dataType = DATATYPE_FLOAT; break;
 					default: fprintf(stderr, "Type unknow of token %s\n",dec->symbol->value);
 				}
-				// fprintf(stderr,"ERR %s %d %s %d\n",dec->symbol->value,dec->dataType,dec->son[1]->symbol->value,dec->son[1]->dataType);
 				if(dec->son[1] && dec->dataType != dec->son[1]->dataType)
 					handleMissMatchingOfType(dec);
 				break;
@@ -40,11 +39,19 @@ void setDeclaration(AST* root) {
 				dec->symbol->type = SYMBOL_VECTOR;
 				switch(dec->son[0]->type){
 					case AST_TYPE_CHAR: 
-					case AST_TYPE_INT: dec->dataType = DATATYPE_INT_VECTOR; break;
-					case AST_TYPE_FLOAT: dec->dataType = DATATYPE_FLOAT_VECTOR; break;
+					case AST_TYPE_INT: dec->dataType = DATATYPE_INT; break;
+					case AST_TYPE_FLOAT: dec->dataType = DATATYPE_FLOAT; break;
 					default: fprintf(stderr, "Type unknow of token %s\n",dec->symbol->value);
 				}
-				// if(dec->son[1])
+				if(dec->son[2]){
+					AST* arrayElement = dec->son[2];
+					for (; arrayElement != NULL; arrayElement = arrayElement->son[0]){
+						// fprintf(stderr,"ERR %s %d %s %d\n",dec->symbol->value,dec->dataType,arrayElement->symbol->value,arrayElement->dataType);
+						if(arrayElement->dataType != dec->dataType){
+							handleMissMatchingOfType(dec);
+						}
+					}
+				}
 				break;
 				
 			case AST_FUNCTION_DECLARATION:{

@@ -2,7 +2,7 @@
 //aa
 int a = 0;
 int i = 'a';
-int v q10p: 0 1 0 2 0 4 0 8 0 13; 
+int v q10p: 0.9 1.9 0 2 0 4 0 8 0 13; 
 int mat q10p; 
 float f = 10.55 + 3.2;
 char c = 'x';
