@@ -69,7 +69,6 @@
 program: element {
                     astPrint($1,0);
                     setDeclaration($1);
-                    checkUndeclared();
                     } 
     ;
 

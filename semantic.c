@@ -22,8 +22,12 @@ void setDeclaration(AST* root) {
 				dec->symbol->type = SYMBOL_VARIABLE;
 				dec->dataType = findTypeByAstNode(dec->son[0]);
 				dec->symbol->dataType[0] = findTypeByAstNode(dec->son[0]);
-				if(dec->son[1] && dec->dataType != dec->son[1]->dataType)
-					handleMissMatchingOfType(dec);
+				if(dec->son[1] && dec->dataType != dec->son[1]->dataType){
+					checkExpressionDataType(node->son[1]);
+					if(node->dataType != node->son[1]->dataType) 
+						handleMissMatchingOfType(dec);
+				}
+					
 				break;
 
 
@@ -37,10 +41,11 @@ void setDeclaration(AST* root) {
 				dec->symbol->dataType[0] = findTypeByAstNode(dec->son[0]);
 				if(dec->son[2]){
 					AST* arrayElement = dec->son[2];
-					for (; arrayElement != NULL; arrayElement = arrayElement->son[0]){
-						if(arrayElement->dataType != dec->dataType){
+					for (; arrayElement ; arrayElement = arrayElement->son[1]){
+						if(arrayElement->son[0]->dataType != dec->dataType){
 							handleMissMatchingOfType(dec);
 						}
+						arrayElement->dataType = dec->dataType;
 					}
 				}
 				break;
@@ -60,7 +65,7 @@ void setDeclaration(AST* root) {
 				
 				AST* params  = functionHead->son[1];
 				int index = 0;
-				for(; params != 0; params = params->son[1]){
+				for(; params ; params = params->son[1]){
 					params->symbol->type=SYMBOL_FUNC_PARAM;
 					params->dataType = findTypeByAstNode(params->son[0]);
 					params->symbol->dataType[index] = findTypeByAstNode(params->son[0]);
@@ -97,6 +102,54 @@ void handleRedeclared(AST* node){
 
 }
 
-void checkUndeclared() {
+void checkExpressionDataType(AST* root){
+	AST* node;
+	AST* ope0;
+	AST* ope1;
 
+	for(node= root; node ; node = node->son[1]){
+		ope0 = node->son[0];
+		ope1 = node->son[1];
+		switch(node->type){
+			case AST_OPERATOR_ADD:
+			case AST_OPERATOR_SUB:
+			case AST_OPERATOR_DIV:
+			case AST_OPERATOR_MUL:
+				checkExpressionDataType(ope0);
+				checkExpressionDataType(ope1);
+				if(ope0->dataType == ope1->dataType && (ope0->dataType == DATATYPE_INT || ope0->dataType == DATATYPE_FLOAT) )
+					node->dataType = ope0->dataType;
+				else
+					handleMissMatchingOfType(node);
+				break;
+			case AST_OPERATOR_AND:
+			case AST_OPERATOR_OR:
+				checkExpressionDataType(ope0);
+				checkExpressionDataType(ope1);
+				if(ope0->dataType == DATATYPE_BOOLEAN &&  ope0->dataType == ope1->dataType)
+					node->dataType = DATATYPE_BOOLEAN;
+				else
+					handleMissMatchingOfType(node);
+				break;
+			case AST_OPERATOR_EQ:
+			case AST_OPERATOR_G:
+			case AST_OPERATOR_GE:
+			case AST_OPERATOR_L:
+			case AST_OPERATOR_LE:
+				checkExpressionDataType(ope0);
+				checkExpressionDataType(ope1);
+				if(ope0->dataType == ope1->dataType && (ope0->dataType == DATATYPE_INT || ope0->dataType == DATATYPE_FLOAT) )
+					node->dataType = DATATYPE_BOOLEAN;
+				else
+					handleMissMatchingOfType(node);
+				break;
+			case AST_OPERATOR_NOT:
+				checkExpressionDataType(ope0);
+				if(ope0->dataType == DATATYPE_BOOLEAN)
+					node->dataType == DATATYPE_BOOLEAN;
+				else
+					handleMissMatchingOfType(node);
+		}
+	}
 }
+

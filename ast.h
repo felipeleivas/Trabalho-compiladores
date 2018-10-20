@@ -56,6 +56,7 @@
 #define DATATYPE_INT 257
 #define DATATYPE_INT_VECTOR 258
 #define DATATYPE_STRING 261
+#define DATATYPE_BOOLEAN 261
 
 #include "hash.h"
 

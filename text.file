@@ -1,8 +1,8 @@
 // UFRGS - Compiladores - Marcelo Johann - 2018/2
 //aa
-int a = 0;
+int a = a + 1 + i + 1 + i;
 int i = 'a';
-int v q10p: 0 9 0 2 0 4 0 8 0 13; 
+int v q10p: 1 9 0 2 0 4 0 8 0 13; 
 int mat q10p; 
 float f = 10.55 + 3.2;
 char c = 'x';
