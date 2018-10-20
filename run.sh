@@ -1,4 +1,4 @@
-# make clean
+make clean
 make
 ./etapa4 text.file
 

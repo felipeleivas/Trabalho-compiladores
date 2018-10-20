@@ -69,6 +69,7 @@
 program: element {
                     astPrint($1,0);
                     setDeclaration($1);
+                    checkCommands($1);
                     } 
     ;
 

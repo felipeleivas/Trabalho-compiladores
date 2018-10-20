@@ -1,16 +1,23 @@
 #include "semantic.h"
 
+extern HASH_TABLE *hashTable;
+
 void setDataTypeForNode(AST* node){
 
 }
 void handleMissMatchingOfType(AST* node){
-	fprintf(stderr, "MISS MATCHIMG OF TYPE of token %s\n",node->symbol->value);
+	while(node->symbol == NULL){
+		node = node->son[0];
+	}
+		fprintf(stderr, "MISS MATCHIMG OF TYPE of token %s\n",node->symbol->value);
 }
 
 
 void setDeclaration(AST* root) {
 	AST* node;
 	AST* dec;
+	AST* rightSide;
+	AST* leftSide;
 
 	for(node= root; node ; node = node->son[1]){
 		dec = node->son[0];
@@ -23,7 +30,7 @@ void setDeclaration(AST* root) {
 				dec->dataType = findTypeByAstNode(dec->son[0]);
 				dec->symbol->dataType[0] = findTypeByAstNode(dec->son[0]);
 				if(dec->son[1] && dec->dataType != dec->son[1]->dataType){
-					checkExpressionDataType(node->son[1]);
+					checkInnerDataType(node->son[1]);
 					if(node->dataType != node->son[1]->dataType) 
 						handleMissMatchingOfType(dec);
 				}
@@ -115,8 +122,8 @@ void checkExpressionDataType(AST* root){
 			case AST_OPERATOR_SUB:
 			case AST_OPERATOR_DIV:
 			case AST_OPERATOR_MUL:
-				checkExpressionDataType(ope0);
-				checkExpressionDataType(ope1);
+				checkInnerDataType(ope0);
+				checkInnerDataType(ope1);
 				if(ope0->dataType == ope1->dataType && (ope0->dataType == DATATYPE_INT || ope0->dataType == DATATYPE_FLOAT) )
 					node->dataType = ope0->dataType;
 				else
@@ -124,8 +131,8 @@ void checkExpressionDataType(AST* root){
 				break;
 			case AST_OPERATOR_AND:
 			case AST_OPERATOR_OR:
-				checkExpressionDataType(ope0);
-				checkExpressionDataType(ope1);
+				checkInnerDataType(ope0);
+				checkInnerDataType(ope1);
 				if(ope0->dataType == DATATYPE_BOOLEAN &&  ope0->dataType == ope1->dataType)
 					node->dataType = DATATYPE_BOOLEAN;
 				else
@@ -136,20 +143,65 @@ void checkExpressionDataType(AST* root){
 			case AST_OPERATOR_GE:
 			case AST_OPERATOR_L:
 			case AST_OPERATOR_LE:
-				checkExpressionDataType(ope0);
-				checkExpressionDataType(ope1);
+				checkInnerDataType(ope0);
+				checkInnerDataType(ope1);
 				if(ope0->dataType == ope1->dataType && (ope0->dataType == DATATYPE_INT || ope0->dataType == DATATYPE_FLOAT) )
 					node->dataType = DATATYPE_BOOLEAN;
 				else
 					handleMissMatchingOfType(node);
 				break;
 			case AST_OPERATOR_NOT:
-				checkExpressionDataType(ope0);
+				checkInnerDataType(ope0);
 				if(ope0->dataType == DATATYPE_BOOLEAN)
-					node->dataType == DATATYPE_BOOLEAN;
+					node->dataType = DATATYPE_BOOLEAN;
 				else
 					handleMissMatchingOfType(node);
 		}
 	}
 }
 
+void checkCommands(AST* root){
+	AST*  node;
+	for(node= root; node ; node = node->son[1]){
+		if(node->son[0]->type == AST_FUNCTION_DECLARATION){
+			AST* block = node->son[0]->son[1];
+			checkBlock(block);
+		}
+	}
+}
+
+void checkBlock(AST* block){
+	AST* rightSide;
+	AST* command;
+	for(command = block->son[0]; command; command = command->son[1]){
+		AST* commandAction = command->son[0];
+		switch(commandAction->type){
+			case AST_ATTRIBUATION:
+				rightSide = commandAction->son[0];
+				checkInnerDataType(rightSide);
+				if((commandAction->symbol->type == SYMBOL_FUNC_PARAM || commandAction->symbol->type == SYMBOL_VARIABLE) &&
+							rightSide->dataType == commandAction->symbol->dataType[0])
+						command->dataType = commandAction->dataType;
+				else
+					handleMissMatchingOfType(command);
+				break;
+			case AST_ATTRIBUATION_VECTOR:{
+				AST* vectorIndex = commandAction->son[0];
+				rightSide = commandAction->son[1];
+				checkInnerDataType(vectorIndex);
+				checkInnerDataType(rightSide);
+				if(commandAction->symbol->type ==SYMBOL_VECTOR && vectorIndex->dataType == DATATYPE_INT &&
+				 rightSide->dataType == commandAction->symbol->dataType[0]){
+					 commandAction->dataType = rightSide->dataType;
+				 }
+				 else
+				 	handleMissMatchingOfType(command);
+				break;
+			}
+		}
+	}
+}
+
+void checkInnerDataType(AST* node){
+	checkExpressionDataType(node);
+}

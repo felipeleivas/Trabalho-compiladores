@@ -6,7 +6,14 @@
 #include <string.h>
 #include "y.tab.h"
 
-#define HASH_SIZE 997
+#define DATATYPE_FLOAT 255
+#define DATATYPE_FLOAT_VECTOR 256
+#define DATATYPE_INT 257
+#define DATATYPE_INT_VECTOR 258
+#define DATATYPE_STRING 261
+#define DATATYPE_BOOLEAN 261
+
+#define HASH_SIZE 20
 #define DATATYPE_MAX 10
 struct hashItem {
     char *value;

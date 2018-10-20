@@ -51,13 +51,6 @@
 #define SYMBOL_FUNC_PARAM 45
 
 
-#define DATATYPE_FLOAT 255
-#define DATATYPE_FLOAT_VECTOR 256
-#define DATATYPE_INT 257
-#define DATATYPE_INT_VECTOR 258
-#define DATATYPE_STRING 261
-#define DATATYPE_BOOLEAN 261
-
 #include "hash.h"
 
 typedef struct ast_node{

@@ -1,5 +1,6 @@
 #include "hash.h"
 #include "util.h"
+#include <string.h>
 
 HASH_TABLE* createHashTable(int size) {
     int i;
@@ -84,6 +85,13 @@ HASH_ITEM* createItem(char* key, char* value, int type) {
     newItem->value = strdup(value);
     newItem->next = NULL;
     newItem->type = type;
+    switch(type){
+        case LIT_INTEGER: newItem->dataType[0] = DATATYPE_INT; break;
+        case LIT_CHAR: newItem->dataType[0] = DATATYPE_INT; break;
+        case LIT_FLOAT: newItem->dataType[0] = DATATYPE_FLOAT; break;
+        case LIT_STRING: newItem->dataType[0] = DATATYPE_STRING; break;
+        default: fprintf(stderr, "Shoul have a knows type");
+    }
     return newItem;
 }
 
@@ -111,16 +119,8 @@ void printHashTable(HASH_TABLE* hashTable) {
         printf("[%d]\n", i);
         hashItem = hashTable->items[i];
         while(hashItem != NULL) {
-            if(hashItem->type == SYMBOL_LIT_INT)
-                printf(" >>Item:\n   -key: %s\n   -value: %s\n   -type: SYMBOL_LIT_INT\n", hashItem->key, hashItem->value);
-            if(hashItem->type == SYMBOL_LIT_FLOAT)
-                printf(" >>Item:\n   -key: %s\n   -value: %s\n   -type: SYMBOL_LIT_FLOAT\n", hashItem->key, hashItem->value);
-            if(hashItem->type == SYMBOL_LIT_STRING)
-                printf(" >>Item:\n   -key: %s\n   -value: %s\n   -type: SYMBOL_LIT_STRING\n", hashItem->key, hashItem->value);
-            if(hashItem->type == SYMBOL_LIT_CHAR)
-                printf(" >>Item:\n   -key: %s\n   -value: %s\n   -type: SYMBOL_LIT_CHAR\n", hashItem->key, hashItem->value);
-            if(hashItem->type == SYMBOL_TK_IDENTIFIER)
-                printf(" >>Item:\n   -key: %s\n   -value: %s\n   -type: SYMBOL_TK_IDENTIFIER\n", hashItem->key, hashItem->value);
+            printf(" >>Item:\n   -key: %s    -value: %s   -type: %d -dataType: %d \n", hashItem->key, hashItem->value, hashItem->type, hashItem->dataType[0]);
+            
             hashItem = hashItem->next;
         }
     }

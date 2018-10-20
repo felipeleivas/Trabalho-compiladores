@@ -22,5 +22,6 @@ int main( int argc, char **argv)
 	// printPogramToFile(programNode,p);	
 	// fclose(p);
     checkUndeclaredHash(hashTable);
+    // printHashTable(hashTable);
     exit(0);
 }

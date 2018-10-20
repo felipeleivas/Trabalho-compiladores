@@ -8,11 +8,11 @@ float f = 10.55 + 3.2;
 char c = 'x';
 char x = 65;
 
-int main d int kb
+int main d float kb
   {
-  jjjjjjjj = 1;
+  a = 1;
   a = 7 - 8;
-  v q2+2p = 90;
+  v q2+2p = 2;
   print vqap;
   k = 2.0;
   print "Digite um numero: \n";   
@@ -26,7 +26,6 @@ int main d int kb
 
   if a==5 then 
     print "Parou no meio\n";
-    print aa;
 
   if a==11 or a==17 then
     print "Var a ficou 11 ou 17\n\n\n\n\n";
@@ -42,5 +41,5 @@ int main d int kb
   read a;
   }
 
-  int felie d int a b {
+  int felie d int rr b {
   }
