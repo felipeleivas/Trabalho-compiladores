@@ -67,8 +67,10 @@
 %%
 
 program: element {
-                    astPrint($1,0);
+                    programNode = $1;
+                    // astPrint($1,0);
                     setDeclaration($1);
+                    checkUndeclared ();
                     checkCommands($1);
                     } 
     ;
@@ -147,7 +149,7 @@ block: '{' commandList '}' {$$ = astCreate(AST_BLOCK, 0, $2,0,0,0);}
 
 commandList: command ';' commandList {$$ = astCreate(AST_COMMAND, 0, $1,$3,0,0);}
             | command ';' {$$ = astCreate(AST_COMMAND, 0, $1,0,0,0);}
-            | ';' commandList {$$ = astCreate(AST_COMMAND, 0, $2,0,0,0);}
+            | ';' commandList {$$ = astCreate(AST_COMMAND, 0, 0,$2,0,0);}
             | ';' {$$ = astCreate(AST_COMMAND, 0, 0,0,0,0);}
             ;
 

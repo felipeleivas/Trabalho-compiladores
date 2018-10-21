@@ -86,7 +86,7 @@ void astPrint(AST* node,int level){
 
 	}
 	if(node->symbol != 0){
-		fprintf(stderr, " %s",node->symbol->value);
+		fprintf(stderr, " -%s",node->symbol->value);
 	}
 
 	if(node->son[0]) {

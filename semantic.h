@@ -13,6 +13,6 @@ int findTypeByAstNode(AST* node);
 void checkExpressionDataType(AST* root);
 void checkInnerDataType(AST* node);
 void checkCommands(AST* root);
-void checkBlock(AST* block);
+int checkBlock(AST* block);
 
 #endif

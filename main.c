@@ -18,10 +18,12 @@ int main( int argc, char **argv)
     initMe();
 
     yyparse();
-    // FILE *p = fopen(argv[1],"w");
-	// printPogramToFile(programNode,p);	
-	// fclose(p);
-    checkUndeclaredHash(hashTable);
+
+    fprintf(stderr,"\nThe program ended successfully\n");
+    FILE *p = fopen("output.txt","w");
+	printPogramToFile(programNode,p);	
+	fclose(p);
+    fprintf(stderr,"\nThe program print ended successfully\n");
     // printHashTable(hashTable);
     exit(0);
 }

@@ -90,7 +90,7 @@ HASH_ITEM* createItem(char* key, char* value, int type) {
         case LIT_CHAR: newItem->dataType[0] = DATATYPE_INT; break;
         case LIT_FLOAT: newItem->dataType[0] = DATATYPE_FLOAT; break;
         case LIT_STRING: newItem->dataType[0] = DATATYPE_STRING; break;
-        default: fprintf(stderr, "Shoul have a knows type");
+        // default: fprintf(stderr, "Shoul have a knows type %d\n",type);
     }
     return newItem;
 }
@@ -129,14 +129,17 @@ void printHashTable(HASH_TABLE* hashTable) {
 
 void checkUndeclaredHash(HASH_TABLE* hashTable) {
     HASH_ITEM *item;
-
+    int thereIsUndeclared= 0;
     int i;
     for (int i = 0; i < HASH_SIZE; ++i)
     {
         for(item = hashTable->items[i];  item; item = item->next) {
             if(item->type == TK_IDENTIFIER) {
+                thereIsUndeclared = 1;
                 fprintf(stderr, "Undeclared symbol %s in hash\n", item->value);
             }
         }
     }
+    if(thereIsUndeclared)
+       exit(4);
 }
