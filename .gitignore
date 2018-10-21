@@ -1,7 +1,5 @@
 *.o
-etapa1
-etapa2
-etapa3
+etapa*
 *.tgz
 lex.yy.c
 y.tab.c
