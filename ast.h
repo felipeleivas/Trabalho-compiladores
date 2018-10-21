@@ -64,4 +64,5 @@ AST* astCreate(int type, HASH_ITEM* symbol,AST* son0, AST* son1, AST* son2, AST*
 void astPrint(AST* node, int level);
 void writeStringOnFile(char* string, FILE* file);
 void printPogramToFile(AST* node, FILE* outputFile);
+void checkUndeclared ();
 #endif

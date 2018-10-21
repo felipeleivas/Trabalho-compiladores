@@ -1,4 +1,6 @@
 #include "ast.h"
+extern HASH_TABLE *hashTable;
+
 
 AST* astCreate(int type, HASH_ITEM* symbol, AST* son0, AST* son1, AST* son2, AST* son3){
 	AST* newNode;
@@ -348,6 +350,9 @@ void printPogramToFile(AST* node, FILE* outputFile){
 
 }
 
+void checkUndeclared(){
+	checkUndeclaredHash(hashTable);
+}
 void writeStringOnFile(char* string, FILE* file){
 	fwrite(string, 1 , sizeof(char) * strlen(string) , file );
 }
