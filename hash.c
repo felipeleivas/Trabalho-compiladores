@@ -1,6 +1,7 @@
 #include "hash.h"
 #include "util.h"
 #include <string.h>
+extern int semanticOutput;
 
 HASH_TABLE* createHashTable(int size) {
     int i;
@@ -141,5 +142,5 @@ void checkUndeclaredHash(HASH_TABLE* hashTable) {
         }
     }
     if(thereIsUndeclared)
-       exit(4);
+       semanticOutput = 4;
 }

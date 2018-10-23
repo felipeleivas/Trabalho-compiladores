@@ -1,0 +1,52 @@
+ int a = 2 + 2 + 3 + 4 + 2 ;
+ int i = a + 1 + 2 + a ;
+ int v q10p  :  1 9 0 2 0 4 0 8 0 13 ;
+ int mat q10p  ;
+ float f = 10.2 + 3.2 ;
+ char c = 'x' ;
+ char x = 65 ;
+ int main d  b {
+a = 7 - 8;
+v q9p = 2;
+print vqap;
+k = f + 2.2;
+print "Digite um numero: \n", "sa", a, a;
+while i < 10 {
+}
+;
+i = maind99.0, 99b;
+print "Incrementado algumas vezes fica ", a, "\n";
+if a == 5 then print "Parou no meio\n";
+if a == 11 or a == 17 then print "Var a ficou 11 ou 17\n\n\n\n\n";
+if a == 11 or 2 == a then print "Parou no meio\n" else print "ELSE";
+;
+;
+;
+{
+;
+}
+;
+{
+}
+;
+return 2;
+read a;
+}
+ int incn d  int w ,  int ww b {
+{
+{
+{
+{
+return 1;
+}
+;
+}
+;
+}
+;
+}
+;
+}
+ int felie d  int rr b {
+return 1;
+}

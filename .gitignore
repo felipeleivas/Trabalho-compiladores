@@ -3,4 +3,3 @@ etapa*
 *.tgz
 lex.yy.c
 y.tab.c
-*.txt

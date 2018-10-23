@@ -1,7 +1,7 @@
 #include "semantic.h"
 
 extern HASH_TABLE *hashTable;
-
+int semanticOutput = 0;
 void setDataTypeForNode(AST* node){
 
 }
@@ -11,7 +11,7 @@ void handleMissMatchingOfType(AST* node){
 	}
 		fprintf(stderr, "MISS MATCHIMG OF TYPE \n");
 		astPrint(node,0);
-		exit(4);
+		semanticOutput = 4;
 }
 
 
@@ -192,7 +192,7 @@ void checkCommands(AST* root){
 		if(node->son[0]->type == AST_FUNCTION_DECLARATION){
 			AST* block = node->son[0]->son[1];
 			int returnType = checkBlock(block);
-			if(node->son[0]->son[0]->symbol->dataType[0] != returnType){
+			if(node->son[0]->son[0]->symbol->dataType[0] != returnType && node->son[0]->son[0]->symbol->dataType[0] != 0){
 				handleMissMatchingOfType(node);
 			}
 		}

@@ -6,7 +6,7 @@
 
 extern HASH_TABLE *hashTable;
 extern AST *programNode;
-
+extern int semanticOutput;
 int main( int argc, char **argv)
 {
     ++argv, --argc;  /* skip over program name */
@@ -17,13 +17,13 @@ int main( int argc, char **argv)
     
     initMe();
 
-    yyparse();
+    return yyparse();
 
-    fprintf(stderr,"\nThe program ended successfully\n");
-    FILE *p = fopen("output.txt","w");
-	printPogramToFile(programNode,p);	
-	fclose(p);
-    fprintf(stderr,"\nThe program print ended successfully\n");
+    // fprintf(stderr,"\nThe program ended successfully\n");
+    // FILE *p = fopen("output.txt","w");
+	// printPogramToFile(programNode,p);	
+	// fclose(p);
+    // fprintf(stderr,"\nThe program print ended successfully\n");
     // printHashTable(hashTable);
-    exit(0);
+    // return semanticOutput;
 }

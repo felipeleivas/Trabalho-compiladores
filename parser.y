@@ -6,6 +6,7 @@
     #include "semantic.h"   
     #include "util.h"   
     AST* programNode;
+    extern int semanticOutput;
 %}
 
 
@@ -72,6 +73,7 @@ program: element {
                     setDeclaration($1);
                     checkUndeclared ();
                     checkCommands($1);
+                    return (semanticOutput);
                     } 
     ;
 
