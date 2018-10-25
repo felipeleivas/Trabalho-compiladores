@@ -5,6 +5,7 @@
     #include "hash.h"   
     #include "semantic.h"   
     #include "util.h"   
+    #include "tacs.h"   
     AST* programNode;
     extern int semanticOutput;
 %}
@@ -73,6 +74,8 @@ program: element {
                     setDeclaration($1);
                     checkUndeclared ();
                     checkCommands($1);
+
+                    tacPrintBackwards(tacGenerate($1));
                     return (semanticOutput);
                     } 
     ;

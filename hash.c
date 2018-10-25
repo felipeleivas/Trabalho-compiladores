@@ -2,7 +2,7 @@
 #include "util.h"
 #include <string.h>
 extern int semanticOutput;
-
+extern HASH_TABLE* hashTable;
 HASH_TABLE* createHashTable(int size) {
     int i;
     HASH_TABLE* hashTable = NULL;
@@ -143,4 +143,11 @@ void checkUndeclaredHash(HASH_TABLE* hashTable) {
     }
     if(thereIsUndeclared)
        semanticOutput = 4;
+}
+
+HASH_ITEM* makeTemp(){
+    static int serial = 0;
+    static char name[100];
+    sprintf(name,"feliPPPP%de",serial++);
+    return pushItem(hashTable,0,0,LIT_INTEGER);
 }

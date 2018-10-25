@@ -37,4 +37,5 @@ HASH_ITEM* createItem(char* key, char* value, int type);
 char* getItem(HASH_TABLE* hashTable, char *key);
 void printHashTable(HASH_TABLE* hashTable);
 void checkUndeclaredHash(HASH_TABLE* hashTable);
+HASH_ITEM* makeTemp();
 #endif
