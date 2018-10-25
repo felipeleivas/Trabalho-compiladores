@@ -8,8 +8,8 @@ float f = 10.2 + 3.2;
 char c = 'x';
 char x = 65;
 
-int main d  b
-  {
+int main d float eee b{ 
+  a = matq2p;
   a = 7 - 8;
   v q9p = 2;
   print vqap;
@@ -19,13 +19,14 @@ int main d  b
     {
     // a = incnda,1b;
     };
-    i = maind b;
+    i = maind 2.2b;
+    eee = 2.2;
     // asasa = 2.0;
  print "Incrementado algumas vezes fica ",a,"\n";
 
   if a==5 then 
     print "Parou no meio\n";
-
+  a = mat ; // n pode ter isso
   if a==11 or a==17 then
     print "Var a ficou 11 ou 17\n\n\n\n\n";
 
@@ -38,7 +39,6 @@ int main d  b
   ;
   {;};
   {};
-  return 2;
   read a;
   // a = 2.3;
   }
