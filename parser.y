@@ -75,7 +75,7 @@ program: element {
                     checkUndeclared ();
                     checkCommands($1);
 
-                    tacPrintBackwards(tacGenerate($1));
+                    //tacPrintBackwards(tacGenerate($1));
                     return (semanticOutput);
                     } 
     ;

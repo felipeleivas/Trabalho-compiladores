@@ -192,7 +192,7 @@ void checkCommands(AST* root){
 		if(node->son[0]->type == AST_FUNCTION_DECLARATION){
 			AST* block = node->son[0]->son[1];
 			int returnType = checkBlock(block);
-			if(node->son[0]->son[0]->symbol->dataType[0] != returnType && node->son[0]->son[0]->symbol->dataType[0] != 0){
+			if(returnType && node->son[0]->son[0]->symbol->dataType[0] != returnType && node->son[0]->son[0]->symbol->dataType[0] != 0){
 				handleMissMatchingOfType(node);
 			}
 		}
@@ -241,7 +241,7 @@ int checkBlock(AST* block){
 					returnType = commandAction->son[0]->dataType;
 				}
 				else{
-					if(returnType != commandAction->son[0]->dataType)
+					if(returnType != commandAction->son[0]->dataType && returnType == 0)
 						handleMissMatchingOfType(commandAction);
 				}
 				break;
