@@ -1,0 +1,62 @@
+// UFRGS - Compiladores - Marcelo Johann - 2018/2
+//aa
+int a = 2 + 2 + 3 + 4 + 2;
+int i = a + 1 + 2 + a;
+int v q10p: 1 9 0 2 0 4 0 8 0 13; 
+int mat q10p; 
+float f = 10.2 + 3.2;
+char c = 'x';
+char x = 65;
+
+int main d float eee b{ 
+  a = matq2p;
+  a = 7 - 8;
+  v q9p = 2;
+  print vqap;
+  //k = f + 2.2;
+  print "Digite um numero: \n", "sa",a, a;   
+  while i<10
+    {
+    // a = incnda,1b;
+    };
+    i = maind 2.2 b;
+    eee = 2.2;
+    // asasa = 2.0;
+ print "Incrementado algumas vezes fica ",a,"\n";
+
+  if a==5 then 
+    print "Parou no meio\n";
+  a = mat ; // n pode ter isso
+  if a==11 or a==17 then
+    print "Var a ficou 11 ou 17\n\n\n\n\n";
+
+  if a==11 or 2 == a then 
+    print "Parou no meio\n"
+  else
+    print  "ELSE";
+  ;
+  ;
+  ;
+  {;};
+  {};
+  read a;
+  // a = 2.3;
+  return 1;
+  }
+  
+  int incn dint w, int wwb
+  {
+    {
+      {
+        {
+          {
+            return 1;
+          };
+        };
+      };
+    };
+  }
+
+  int felie d int rr b {
+    return 1;
+  }

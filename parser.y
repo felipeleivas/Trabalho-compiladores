@@ -8,6 +8,8 @@
     #include "tacs.h"   
     AST* programNode;
     extern int semanticOutput;
+    extern HASH_TABLE *hashTable;
+
 %}
 
 
@@ -70,12 +72,12 @@
 
 program: element {
                     programNode = $1;
-                    // astPrint($1,0);
+                    astPrint($1,0);
                     setDeclaration($1);
                     checkUndeclared ();
                     checkCommands($1);
 
-                    //tacPrintBackwards(tacGenerate($1));
+                    tacPrintBackwards(tacGenerate($1));
                     return (semanticOutput);
                     } 
     ;

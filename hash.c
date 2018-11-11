@@ -1,8 +1,7 @@
 #include "hash.h"
-#include "util.h"
-#include <string.h>
+
 extern int semanticOutput;
-extern HASH_TABLE* hashTable;
+
 HASH_TABLE* createHashTable(int size) {
     int i;
     HASH_TABLE* hashTable = NULL;
@@ -141,13 +140,17 @@ void checkUndeclaredHash(HASH_TABLE* hashTable) {
             }
         }
     }
-    if(thereIsUndeclared)
+     if(thereIsUndeclared)
        semanticOutput = 4;
 }
 
-HASH_ITEM* makeTemp(){
+HASH_ITEM* makeTemp(HASH_TABLE hash){
     static int serial = 0;
     static char name[100];
     sprintf(name,"feliPPPP%de",serial++);
-    return pushItem(hashTable,0,0,LIT_INTEGER);
+    print("Cheogu %d\n",hash.size);
+    pushItem(&hash,0,0,0);
+    print("Acabou\n");
+     
+     return NULL;
 }

@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "y.tab.h"
+#include "util.h"
 
 #define DATATYPE_FLOAT 255
 #define DATATYPE_FLOAT_VECTOR 256
@@ -37,5 +38,5 @@ HASH_ITEM* createItem(char* key, char* value, int type);
 char* getItem(HASH_TABLE* hashTable, char *key);
 void printHashTable(HASH_TABLE* hashTable);
 void checkUndeclaredHash(HASH_TABLE* hashTable);
-HASH_ITEM* makeTemp();
+HASH_ITEM* makeTemp(HASH_TABLE hash);
 #endif
