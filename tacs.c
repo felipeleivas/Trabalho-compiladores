@@ -103,7 +103,15 @@ void tacPrintBackwards(TAC *tac){
         tacPrintBackwards(tac->prev);
     }
     else{
-        print("finish the I WANNA THE PERSON WHO INVENTED ABAP GO FUCK YOURSELF tac\n\n");
+    }
+}
+
+void tacPrintForwards(TAC *tac){
+    if(tac){
+        tacPrintForwards(tac->prev);
+        tacPrintSingle(tac);
+    }
+    else{
     }
 }
 
