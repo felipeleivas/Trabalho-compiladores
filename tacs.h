@@ -41,6 +41,7 @@
 #define TAC_TYPE_CHAR 36
 #define TAC_TYPE_INT 37
 #define TAC_TYPE_FLOAT 38
+#define TAC_IDENTIFIER 39
 
 typedef struct tac_struct{
     int type;

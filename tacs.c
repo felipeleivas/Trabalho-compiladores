@@ -90,11 +90,13 @@ void tacPrintSingle(TAC *tac){
             break;
         case TAC_TYPE_FLOAT: print("TAC_TYPE_FLOAT");
             break;
+        case TAC_IDENTIFIER: print("TAC_IDENTIFIER");
+            break;
         default: print("TAC_UNKOWN");
     }
-    if(tac->res) fprintf(stderr,",%s",tac->res->value); else print(",0"); 
-    if(tac->op1) fprintf(stderr,",%s",tac->op1->value); else print(",0"); 
-    if(tac->op2) fprintf(stderr,",%s",tac->op2->value); else print(",0"); 
+    if(tac->res) fprintf(stderr,",%s",tac->res->key); else print(",0"); 
+    if(tac->op1) fprintf(stderr,",%s",tac->op1->key); else print(",0"); 
+    if(tac->op2) fprintf(stderr,",%s",tac->op2->key); else print(",0"); 
     print("\n");
 }
 void tacPrintBackwards(TAC *tac){
@@ -223,17 +225,19 @@ TAC* tacGenerate(AST* node){
             return tacJoin(result[0], tacCreate(TAC_CALL,makeTemp2(),node->symbol,0));                 
         
         case AST_PARAMETER:
+                return tacJoin(result[0],result[1]);
+
         case AST_PRINT_STRING:
         case AST_PRINT_EXPRESSION:
                 return tacJoin(  
                             tacJoin(
                                 result[0],
-                                tacCreate(TAC_ARG,node->symbol,0,0)
+                                tacCreate(TAC_PRINT,node->symbol,0,0)
                             ),
                             result[1]  
                         );
         case AST_PRINT:
-            return tacJoin(result[0], tacCreate(returnTacSymbolBasedOnAstSymbol(node->type), 0,0,0));
+            return result[0];
         case AST_READ:
             return tacJoin(result[0], tacCreate(returnTacSymbolBasedOnAstSymbol(node->type), node->symbol,0,0));
         case AST_VECTOR:
@@ -251,6 +255,8 @@ TAC* tacGenerate(AST* node){
             return result[0];
         case AST_WHILE:
             return makeWhile(result[0],result[1]);
+        case AST_IDENTIFIER:
+            return tacCreate(TAC_IDENTIFIER,node->symbol,0,0);
         default: return tacJoin(tacJoin(tacJoin(result[0],result[1]),result[2]),result[3]);
     }
     return 0;
@@ -269,14 +275,14 @@ TAC* tacJoin(TAC* l1, TAC* l2){
 HASH_ITEM* makeTemp2(){
     static int serial = 0;
     static char name[100];
-    sprintf(name,"feliPPPP%de",serial++);
+    sprintf(name,"Variable--%d",serial++);
     return pushItem(hashTable,name,name,LIT_INTEGER);     
 }
 
 HASH_ITEM* createLabel() {
     static int currentLabel = 0;
     char fname[100];
-    sprintf(fname,"LabEllLLL%deEE",currentLabel++);	
+    sprintf(fname,"Label--%d",currentLabel++);	
     return pushItem(hashTable,fname,fname, LIT_STRING);
 }
 

@@ -12,7 +12,7 @@ int maindint sooooo, int riririrb{
 int feliedint rib{
   ri = maind2,sq1pb;
   sq2p = 122;
-  ri = 2;
+  ri = 2 + 2 + 3 + 2 + 1 + 4;
   read a;
   if a==11 then
    print "2", "12", "felipe"
