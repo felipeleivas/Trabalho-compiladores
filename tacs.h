@@ -55,9 +55,11 @@ typedef struct tac_struct{
 TAC* tacCreate(int type, HASH_ITEM* res, HASH_ITEM* op1, HASH_ITEM* op2);
 void tacPrintSingle(TAC *tac);
 void tacPrintBackwards(TAC *tac);
+TAC* tacReverse(TAC* tac);
 
 TAC* tacGenerate(AST* node);
 TAC* tacJoin(TAC* l1, TAC* l2);
 HASH_ITEM* makeTemp2();
 HASH_ITEM* createLabel();
+void asmGen(TAC* first);
 #endif

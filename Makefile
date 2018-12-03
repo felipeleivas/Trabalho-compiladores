@@ -7,8 +7,8 @@
 # Therefore, there must be a header of it to be included in scanner.l
 #
 
-etapa5: hash.o semantic.o lex.yy.o tacs.o main.o y.tab.o ast.o
-	gcc -o etapa5 hash.o semantic.o tacs.o lex.yy.o main.o y.tab.o ast.o
+etapa6: hash.o semantic.o lex.yy.o tacs.o main.o y.tab.o ast.o
+	gcc -o etapa6 hash.o semantic.o tacs.o lex.yy.o main.o y.tab.o ast.o
 main.o: main.c
 	gcc -c main.c
 ast.o: ast.c
@@ -28,4 +28,4 @@ lex.yy.c: y.tab.c scanner.l
 y.tab.c: parser.y
 	yacc -d parser.y
 clean:
-	rm *.o lex.yy.c y.tab.c etapa5
+	rm *.o lex.yy.c y.tab.c etapa6

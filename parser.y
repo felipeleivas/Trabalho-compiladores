@@ -72,12 +72,17 @@
 
 program: element {
                     programNode = $1;
+                    fprintf(stderr, "\n\nAST PRINT\n");
                     astPrint($1,0);
                     setDeclaration($1);
                     checkUndeclared ();
                     checkCommands($1);
 
-                    tacPrintForwards(tacGenerate($1));
+                    TAC* t = tacReverse(tacGenerate($1));
+                    fprintf(stderr, "\n\nTAC PRINT\n");
+                    tacPrintForwards(t);
+                    fprintf(stderr, "\n\nASSEMBLY GENERATION PRINT\n");
+                    asmGen(t);
                     return (semanticOutput);
                     } 
     ;

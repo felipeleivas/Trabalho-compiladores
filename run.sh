@@ -1,5 +1,5 @@
 make clean
 make
-./etapa5 text.file
+./etapa6 text.file
 
 yacc parser.y -v
