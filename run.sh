@@ -1,5 +1,6 @@
-make clean
-make
-./etapa6 text.file
-
-yacc parser.y -v
+make clean |
+make &&
+./etapa6 text.file &&
+gcc asm.s &&
+./a.out
+# yacc parser.y -v

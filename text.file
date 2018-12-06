@@ -1,22 +1,7 @@
-int a = 3;
-int sq3p: 2 4 21;
-int maindint sooooo, int riririrb{
- a = 8-9;
- while a<10
-    {
-    a = 2;
-    };
- return sooooo;
-}
-
-int feliedint rib{
-  ri = maind2,sq1pb;
-  sq2p = 122;
-  ri = 2 + 2 + 3 + 2 + 1 + 4;
-  read a;
-  if a==11 then
-   print "2", "12", "felipe"
-   else
-    print "eeeee";
-
+int x = 92;
+int a = 2;
+int r = 4;
+int _maindb{
+    x = a + r;
+    print x, " OI PRI\n";
 }

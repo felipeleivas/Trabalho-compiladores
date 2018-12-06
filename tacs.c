@@ -7,6 +7,20 @@ TAC* makeWhile(TAC* code0, TAC* code1);
 void print(char *a){
     fprintf(stderr, a);
 }
+
+char * convertTypeToAssemblyType(int type){
+    switch(type){
+        case DATATYPE_INT: return "\"%d\"";
+        case DATATYPE_FLOAT: return "%f";
+        default: fprintf(stderr,"UNKOWN TYPE %d, %d\n",type,LIT_FLOAT);
+    }
+    return "%d",type;
+}
+
+TAC* createTempDeclaration(HASH_ITEM* item){
+
+    return tacCreate(TAC_VAR_DECL, item,pushItem(hashTable,"0","0",LIT_INTEGER),0);
+}
 TAC* tacCreate(int type, HASH_ITEM* res, HASH_ITEM* op1, HASH_ITEM* op2){
     TAC* newTac = (TAC*) calloc(1,sizeof(TAC));
     newTac->type = type;
@@ -162,6 +176,7 @@ TAC* tacGenerate(AST* node){
     {
         result[i] = tacGenerate(node->son[i]);
     }
+    HASH_ITEM *tempNode;
     switch(node->type){
         case AST_LITERAL: 
             return tacCreate(returnTacSymbolBasedOnAstSymbol(node->type), node->symbol, 0,0);
@@ -176,11 +191,14 @@ TAC* tacGenerate(AST* node){
         case AST_OPERATOR_G: 
         case AST_OPERATOR_EQ: 
         case AST_OPERATOR_ADD: 
+            tempNode = makeTemp2();
+            
             return tacJoin(
+                createTempDeclaration(tempNode),tacJoin(
                         tacJoin(result[0],result[1]),
-                            tacCreate(returnTacSymbolBasedOnAstSymbol(node->type),makeTemp2(),
+                            tacCreate(returnTacSymbolBasedOnAstSymbol(node->type),tempNode,
                                 result[0]?result[0]->res:0,
-                                result[1]?result[1]->res:0));
+                                result[1]?result[1]->res:0)));
         case AST_RETURN:
             return tacJoin(
                 result[0],
@@ -189,9 +207,12 @@ TAC* tacGenerate(AST* node){
                     0,0)); 
             
         case AST_OPERATOR_NOT: 
-                return tacJoin(result[0],
-                                tacCreate(returnTacSymbolBasedOnAstSymbol(node->type),makeTemp2(),
-                                    result[0]?result[0]->res:0,0));
+                tempNode = makeTemp2();
+                return tacJoin(createTempDeclaration(tempNode),
+                       tacJoin(result[0],
+                            tacCreate(returnTacSymbolBasedOnAstSymbol(node->type),tempNode,
+                                result[0]?result[0]->res:0,0)));
+        
 
 
         case AST_FUNCTION_DECLARATION:{
@@ -233,11 +254,18 @@ TAC* tacGenerate(AST* node){
                 return tacJoin(result[0],result[1]);
 
         case AST_PRINT_STRING:
-        case AST_PRINT_EXPRESSION:
                 return tacJoin(  
                             tacJoin(
                                 result[0],
                                 tacCreate(TAC_PRINT,node->symbol,0,0)
+                            ),
+                            result[1]  
+                        );
+        case AST_PRINT_EXPRESSION:
+            return tacJoin(  
+                            tacJoin(
+                                result[0],
+                                tacCreate(TAC_PRINT,result[0]->res,0,0)
                             ),
                             result[1]  
                         );
@@ -280,14 +308,14 @@ TAC* tacJoin(TAC* l1, TAC* l2){
 HASH_ITEM* makeTemp2(){
     static int serial = 0;
     static char name[100];
-    sprintf(name,"Variable--%d",serial++);
+    sprintf(name,"Variable%d",serial++);
     return pushItem(hashTable,name,name,LIT_INTEGER);     
 }
 
 HASH_ITEM* createLabel() {
     static int currentLabel = 0;
     char fname[100];
-    sprintf(fname,"Label--%d",currentLabel++);	
+    sprintf(fname,"Label%d",currentLabel++);	
     return pushItem(hashTable,fname,fname, LIT_STRING);
 }
 
@@ -333,8 +361,8 @@ void asmGen(TAC* first) {
 		strings[i] = 0;
 
 	i = 0;
-
-fprintf(stderr, "\n");
+fprintf(fout,"	.section	__TEXT,__text,regular,pure_instructions\n");
+fprintf(stderr, "Começou:\n");
     for(tac = first; tac; tac=tac->next) {
                     fprintf(stderr, "tac->type = %d\n", tac->type);
         switch(tac->type) {
@@ -348,11 +376,13 @@ fprintf(stderr, "\n");
             case TAC_ADD:
                 fprintf(fout, 
                     "##TAC_ADD\n"
-					"\t.comm _%s,4,4\n"
-                    "\tmovl _%s(%%rip), %%eax\n"
-                    "\taddl _%s(%%rip), %%eax\n"
-                    "\tmovl %%eax, _%s(%%rip)\n"
-                    , tac->res->value, tac->op1->value, tac->op2->value, tac->res->value);
+                    "\tmovl	_%s(%%rip), %%eax\n"
+                    "\tcvtsi2ssl	%%eax, %%xmm0\n"
+                    "\taddss	_%s(%%rip), %%xmm0\n"
+                    "\tcvttss2si	%%xmm0, %%eax\n"
+                    "\tmovl	%%eax, _%s(%%rip)\n",
+                    tac->op1->key, tac->op2->key, tac->res->key);
+                    
                 break;
             case TAC_SUB: 
                 fprintf(fout, 
@@ -496,8 +526,7 @@ fprintf(stderr, "\n");
 				if(strcmp(tac->res->value, "main"))
 					fprintf(fout, "\tpopq	 %%rbp\n");
 				fprintf(fout,
-					"\tleave\n"
-                    "\tret \n"
+                    "\tretq \n"
 					"\t.cfi_endproc\n");
                 break;
             case TAC_MOV: 
@@ -524,12 +553,6 @@ fprintf(stderr, "\n");
             case TAC_ATRI_VEC: print("TAC_ATRI_VEC");
                 break;
             case TAC_VAR_DECL:
-                fprintf(fout, 
-					"##TAC_VAR_DECL\n"
-					"\t.globl \t_%s\n"
-					"\t.data\n"
-					"_%s:\n"
-					"\t.long \t%s\n", tac->res->value, tac->res->value, tac->op1->value);
                 break;  
             case TAC_FUNC_HEAD: print("TAC_FUNC_HEAD");
                 break;
@@ -539,28 +562,22 @@ fprintf(stderr, "\n");
                     "\t.comm _%s,4,4\n", tac->res->value);
                 break;
             case TAC_PRINT:
-                if(tac->res->type != 7){
+                if(tac->res->type == LIT_STRING){
 					fprintf(fout, 
-							"##TAC_PRINT\n");
-                    if(tac->res->type != 1)
-                        fprintf(fout,
-							"\t.comm _%s,4,4 ##%d\n", tac->res->value, tac->res->type);
-					if(tac->res->type > 3 && tac->res->type < 7)
-						fprintf(fout, "\tmovl $%s, _%s(%%rip)\n", tac->res->value, tac->res->value);
-					fprintf(fout, 
-						"\tmovl	_%s(%%rip), %%esi\n"
-						"\tmovl	$.LC0, %%edi\n"
-						"\tmovl	$0, %%eax\n"
-						"\tcall	printf\n", tac->res->value);
+							"##TAC_PRINT_STRING\n"
+                            "\tleaq	.LC%d(%%rip), %%rdi\n"
+                            "\tmovb	$0, %%al\n"
+                            "\tcallq	_printf\n",i);
+                        strings[i++]=tac->res->value;
 				}
 				else{
-					strings[i++] = tac->res->value;
-					fprintf(fout, 
-						"##TAC_PRINT\n"
-						"\tmovl	%%eax, %%esi\n"
-						"\tmovl	$.LC%d, %%edi\n"
-						"\tmovl	$0, %%eax\n"
-						"\tcall	printf\n", i);
+                    fprintf(fout, 
+							"##TAC_PRINT_EXPRESSION\n"
+                            "\tleaq	.LC%d(%%rip), %%rdi\n"
+                            "\tmovl	_%s(%%rip), %%esi\n"
+                            "\tmovb	$0, %%al\n"
+                            "\tcallq	_printf\n",i,tac->res->value);
+                            strings[i++]=convertTypeToAssemblyType(tac->res->dataType[0]);
 				}
                 break;
             case TAC_READ:
@@ -618,11 +635,27 @@ fprintf(stderr, "\n");
                 break;
             default: print("TAC_UNKOWN");
         }
-        fprintf(fout,".LC0:\n\t.string \"%%d\"\n");
-        for(i = 0; strings[i]; i++){
-            fprintf(fout, 	".LC%d:\n"
-                "\t.string %s\n"
-                , i+1, strings[i]);
-        }
+
     }
+
+    fprintf(fout, "\n\n	.section	__DATA,__data\n");
+    for(tac = first; tac; tac=tac->next) {
+                    fprintf(stderr, "tac->type = %d\n", tac->type);
+        switch(tac->type) {
+            case TAC_VAR_DECL:
+                fprintf(fout, 
+					"##TAC_VAR_DECL\n"
+					"\t.globl \t_%s\n"
+					"\t.data\n"
+					"_%s:\n"
+					"\t.long \t%s\n", tac->res->value, tac->res->value, tac->op1->value);
+                break;  
+            
+        }        
+    }
+    for(i = 0; strings[i]; i++){
+            fprintf(fout,      ".LC%d:\n"
+                "\t.string %s\n"
+                , i, strings[i]);
+        }
 }

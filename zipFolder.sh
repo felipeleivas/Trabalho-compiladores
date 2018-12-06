@@ -1,1 +1,1 @@
-tar cvzf etapa5.tgz  --exclude .git/ .
+tar cvzf etapa6.tgz  --exclude .git/ .
