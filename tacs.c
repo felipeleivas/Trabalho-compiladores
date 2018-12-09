@@ -362,38 +362,27 @@ void asmGen(TAC* first) {
 
 	i = 0;
 fprintf(fout,"	.section	__TEXT,__text,regular,pure_instructions\n");
-fprintf(stderr, "Começou:\n");
+// fprintf(stderr, "Começou:\n");
     for(tac = first; tac; tac=tac->next) {
-                    fprintf(stderr, "tac->type = %d\n", tac->type);
+                    // fprintf(stderr, "tac->type = %d\n", tac->type);
         switch(tac->type) {
             case TAC_SYMBOL:
-                fprintf(fout, "## TAC_SYMBOL\n");
-				if(tac->res->type > 3 && tac->res->type < 7){ // se for literal (se for identificador, acho q nao precisa)
-                    fprintf(fout, "\t.comm _%s,4,4\n", tac->res->value);
-					fprintf(fout, "\tmovl $%s, _%s(%%rip)\n", tac->res->value, tac->res->value);
-				}
                 break;
             case TAC_ADD:
                 fprintf(fout, 
                     "##TAC_ADD\n"
                     "\tmovl	_%s(%%rip), %%eax\n"
-                    "\tcvtsi2ssl	%%eax, %%xmm0\n"
-                    "\taddss	_%s(%%rip), %%xmm0\n"
-                    "\tcvttss2si	%%xmm0, %%eax\n"
+                    "\taddl	_%s(%%rip), %%eax\n"
                     "\tmovl	%%eax, _%s(%%rip)\n",
-                    tac->op1->key, tac->op2->key, tac->res->key);
-                    
+                    tac->op1->key, tac->op2->key, tac->res->key);         
                 break;
             case TAC_SUB: 
                 fprintf(fout, 
                     "##TAC_SUB\n"
-					"\t.comm _%s,4,4\n"
-                    "\tmovl _%s(%%rip), %%edx\n"
-					"\tmovl _%s(%%rip), %%eax\n"
-                    "\tsubl %%eax, %%edx\n"
-                    "\tmovl %%edx, %%eax\n"
-					"\tmovl %%eax, _%s(%%rip)\n"
-                    , tac->res->value, tac->op1->value, tac->op2->value, tac->res->value);
+                    "\tmovl _%s(%%rip), %%esi\n"
+                    "\tsubl _%s(%%rip), %%esi\n"
+					"\tmovl %%esi, _%s(%%rip)\n"
+                    , tac->op1->value, tac->op2->value, tac->res->value);
                 break;
             case TAC_DIV:
                 fprintf(fout, 
@@ -423,70 +412,66 @@ fprintf(stderr, "Começou:\n");
             case TAC_LE:            
                 fprintf(fout, 
                     "##TAC_LE\n"
-                    "\t.comm _%s,4,4\n"
                     "\tmovl _%s(%%rip), %%eax\n"
                     "\tcmp %%eax, _%s(%%rip)\n"
-                    "\tjle HUE%d\n"
-                    "\tmovl $0, _%s(%%rip)\n"
-                    "\tjmp FIMHUE%d\n"
-                    "HUE%d:\n\tmovl $1, _%s(%%rip)\n"
-                    "FIMHUE%d:\n "
-                    , tac->res->value, tac->op1->value, tac->op2->value, j, tac->res->value, j, j, tac->res->value, j);
+                    "\tjl TrUE%d\n"
+                    "\tmovl $1, _%s(%%rip)\n"
+                    "\tjmp FAlSE%d\n"
+                    "TrUE%d:\n\tmovl $0, _%s(%%rip)\n"
+                    "FAlSE%d:\n "
+                    , tac->op1->value, tac->op2->value, j, tac->res->value, j, j, tac->res->value, j);
                 j++;
                 break;
             case TAC_GE:            
                 fprintf(fout, 
                     "##TAC_GE\n"
-                    "\t.comm _%s,4,4\n"
                     "\tmovl _%s(%%rip), %%eax\n"
                     "\tcmp %%eax, _%s(%%rip)\n"
-                    "\tjge HUE%d\n"
-                    "\tmovl $0, _%s(%%rip)\n"
-                    "\tjmp FIMHUE%d\n"
-                    "HUE%d:\n\tmovl $1, _%s(%%rip)\n"
-                    "FIMHUE%d:\n "
-                    , tac->res->value, tac->op1->value, tac->op2->value, j, tac->res->value, j, j, tac->res->value, j);
+                    "\tjg TrUE%d\n"
+                    "\tmovl $1, _%s(%%rip)\n"
+                    "\tjmp FAlSE%d\n"
+                    "TrUE%d:\n\tmovl $0, _%s(%%rip)\n"
+                    "FAlSE%d:\n "
+                    , tac->op1->value, tac->op2->value, j, tac->res->value, j, j, tac->res->value, j);
                 j++;
                 break;
             case TAC_G:
                 fprintf(fout, 
-                    "##TAC_GT\n"
-                    "\t.comm _%s,4,4\n"
+                    "##TAC_G\n"
                     "\tmovl _%s(%%rip), %%eax\n"
                     "\tcmp %%eax, _%s(%%rip)\n"
-                    "\tjg HUE%d\n"
-                    "\tmovl $0, _%s(%%rip)\n"
-                    "\tjmp FIMHUE%d\n"
-                    "HUE%d:\n\tmovl $1, _%s(%%rip)\n"
-                    , tac->res->value, tac->op1->value, tac->op2->value, j, tac->res->value, j, j, tac->res->value, j);
+                    "\tjge TrUE%d\n"
+                    "\tmovl $1, _%s(%%rip)\n"
+                    "\tjmp FAlSE%d\n"
+                    "TrUE%d:\n\tmovl $0, _%s(%%rip)\n"
+                    "FAlSE%d:\n "
+                    , tac->op1->value, tac->op2->value, j, tac->res->value, j, j, tac->res->value, j);
                 j++;
                 break;
             case TAC_EQ: 
                 fprintf(fout, 
                     "##TAC_EQ\n"
-                    "\t.comm _%s,4,4\n"
                     "\tmovl _%s(%%rip), %%eax\n"
                     "\tcmp %%eax, _%s(%%rip)\n"
-                    "\tje HUE%d\n"
+                    "\tjne TrUE%d\n"
                     "\tmovl $1, _%s(%%rip)\n"
-                    "\tjmp FIMHUE%d\n"
-                    "HUE%d:\n\tmovl $0, _%s(%%rip)\n"
-                    "FIMHUE%d:\n "
-                    , tac->res->value, tac->op1->value, tac->op2->value, j, tac->res->value, j, j, tac->res->value, j);
+                    "\tjmp FAlSE%d\n"
+                    "TrUE%d:\n\tmovl $0, _%s(%%rip)\n"
+                    "FAlSE%d:\n "
+                    , tac->op1->value, tac->op2->value, j, tac->res->value, j, j, tac->res->value, j);
                 j++;
                 break;
             case TAC_L:
                  fprintf(fout, 
                     "##TAC_LT\n"
-                    "\t.comm _%s,4,4\n"
                     "\tmovl _%s(%%rip), %%eax\n"
                     "\tcmp %%eax, _%s(%%rip)\n"
-                    "\tjl HUE%d\n"
-                    "\tmovl $0, _%s(%%rip)\n"
-                    "\tjmp FIMHUE%d\n"
-                    "HUE%d:\n\tmovl $1, _%s(%%rip)\n"
-                    "FIMHUE%d:\n "
-                    , tac->res->value, tac->op1->value, tac->op2->value, j, tac->res->value, j, j, tac->res->value, j);
+                    "\tjle TrUE%d\n"
+                    "\tmovl $1, _%s(%%rip)\n"
+                    "\tjmp FAlSE%d\n"
+                    "TrUE%d:\n\tmovl $0, _%s(%%rip)\n"
+                    "FAlSE%d:\n "
+                    , tac->op1->value, tac->op2->value, j, tac->res->value, j, j, tac->res->value, j);
                 j++;
                 break;
             case TAC_LABLE: 
@@ -508,7 +493,12 @@ fprintf(stderr, "Começou:\n");
 					"\tleave\n"
                    	"\tret \n"); 
                 break;
-            case TAC_ATRI: print("TAC_ATRI");
+            case TAC_ATRI: 
+                fprintf(fout,
+                    "#TAC_ATRI\n"
+                    "movl _%s(%%rip), %%eax\n"
+                    "movl %%eax, _%s(%%rip)\n",tac->op1->key, tac->res->key
+                );
                 break;
             case TAC_ARG: print("TAC_ARG");
                 break;
@@ -540,6 +530,7 @@ fprintf(stderr, "Começou:\n");
                 fprintf(fout, 
                     "##TAC_IFZ\n"
                     "\tmovl _%s(%%rip), %%eax\n"                    
+                    "\tcmp $0, %%eax\n"                    
                     "\tjz %s\n"
                     , tac->op1->value, tac->res->value);
                 break;
@@ -625,13 +616,13 @@ fprintf(stderr, "Começou:\n");
                     "\tmovl %%eax, _%s(%%rip) \n"	
                     ,tac->res->value,tac->op2->value,tac->op1->value,tac->res->value);
                 break;
-            case TAC_TYPE_CHAR: print("TAC_TYPE_CHAR");
+            case TAC_TYPE_CHAR: //print("TAC_TYPE_CHAR");
                 break;
-            case TAC_TYPE_INT: print("TAC_TYPE_INT");
+            case TAC_TYPE_INT: //print("TAC_TYPE_INT");
                 break;
-            case TAC_TYPE_FLOAT: print("TAC_TYPE_FLOAT");
+            case TAC_TYPE_FLOAT: //print("TAC_TYPE_FLOAT");
                 break;
-            case TAC_IDENTIFIER: print("TAC_IDENTIFIER");
+            case TAC_IDENTIFIER: //print("TAC_IDENTIFIER");
                 break;
             default: print("TAC_UNKOWN");
         }
@@ -640,7 +631,7 @@ fprintf(stderr, "Começou:\n");
 
     fprintf(fout, "\n\n	.section	__DATA,__data\n");
     for(tac = first; tac; tac=tac->next) {
-                    fprintf(stderr, "tac->type = %d\n", tac->type);
+                    // fprintf(stderr, "tac->type = %d\n", tac->type);
         switch(tac->type) {
             case TAC_VAR_DECL:
                 fprintf(fout, 
@@ -653,6 +644,22 @@ fprintf(stderr, "Começou:\n");
             
         }        
     }
+
+    HASH_ITEM *hashItem = NULL;
+    for(i=0; i<hashTable->size; i++) {
+        hashItem = hashTable->items[i];
+        while(hashItem != NULL) {
+            if(hashItem->value[0] <= '9' && hashItem->value[0] >= '0')
+            fprintf(fout, 
+					"##DECL_LITERAL\n"
+					"\t.globl \t_%s\n"
+					"\t.data\n"
+					"_%s:\n"
+					"\t.long \t%s\n", hashItem->value, hashItem->value, hashItem->value);
+            hashItem = hashItem->next;
+        }
+    }
+
     for(i = 0; strings[i]; i++){
             fprintf(fout,      ".LC%d:\n"
                 "\t.string %s\n"

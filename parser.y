@@ -80,9 +80,7 @@ program: element {
                     TAC* t = tacReverse(tacGenerate($1));
                     fprintf(stderr, "\n\nTAC PRINT\n");
                     tacPrintForwards(t);
-                    fprintf(stderr, "\n\nASSEMBLY GENERATION PRINT\n");
                     asmGen(t);
-                    printHashTable(hashTable);
                     return (semanticOutput);
                     } 
     ;

@@ -1,7 +1,9 @@
 int x = 92;
 int a = 2;
 int r = 4;
+int i = 0;
 int _maindb{
-    x = a + r;
+    x = 20 / 10;
     print x, " OI PRI\n";
+    
 }

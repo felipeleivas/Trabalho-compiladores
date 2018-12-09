@@ -1,0 +1,95 @@
+int x = 92;
+int a = 2;
+int r = 4;
+int i = 0;
+int _maindb{
+    x = 20 / 10;
+    print x, " OI PRI\n";
+    if 2 <= 2 then 
+    print "certo\n"
+    else
+    print  "errado\n";
+    
+    
+    if 1 < 2 then 
+    print "certo\n"
+    else
+    print  "errado\n";
+    
+    if 2 == 2 then 
+    print "certo\n"
+    else
+    print  "errado\n";
+    
+    if 1 >= 0 then 
+    print "certo\n"
+    else
+    print  "errado\n";
+    
+    if 1 > 0 then 
+    print "certo\n"
+    else
+    print  "errado\n";
+    
+    if 1 <= 0 then 
+    print  "errado\n"
+    else
+    print "certo\n";
+    
+    if 1 <= 0 then 
+    print  "errado\n"
+    else
+    print "certo\n";
+    
+    if 1 == 2 then 
+    print  "errado\n"
+    else
+    print "certo\n";
+    
+    if 1 >= 2 then 
+    print  "errado\n"
+    else
+    print "certo\n";
+    
+    if 1 > 2 then 
+    print  "errado\n"
+    else
+    print "certo\n";
+
+    if 2 == 2 then
+    print "1\n";
+    
+    if 2 == 1 then
+    print "N devia printar 1\n";
+    
+    if 2 >= 2 then
+    print "2\n";
+    
+    if 2 >= 8 then 
+    print "N devia printar 2\n";
+    
+    if 2 <= 2 then
+    print "3\n";
+    
+    if 2 <= 0 then
+    print "N devia printar 3\n";
+
+    if 2 < 3 then
+    print "4\n";
+    
+    if 2 < 2 then
+    print "N devia printar 4\n";
+    
+    if 2 > 1 then
+    print "5\n";
+    
+    if 2 > 2 then
+    print "N devia printar 5\n";
+
+    while i<=10
+    {
+    print i, "\n";
+    i = i+1;
+    };
+    
+}
