@@ -1,9 +1,9 @@
 int x = 92;
-int a = 2;
-int r = 4;
-int i = 0;
+int v q10p: 1 9 0 2 0 4 0 8 0 13; 
+int mat q10p; 
+
 int _maindb{
     x = 20 / 10;
     print x, " OI PRI\n";
-    
 }
+

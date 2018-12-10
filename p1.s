@@ -12,28 +12,12 @@ _main:                                  ## @main
 	.cfi_def_cfa_register %rbp
 	subq	$16, %rsp
 	leaq	L_.str(%rip), %rdi
-	movl	$0, -4(%rbp)
-	movl	$1, _b(%rip)
-	movl	_b(%rip), %esi
+	leaq	_str(%rip), %rsi
 	movb	$0, %al
 	callq	_printf
-	leaq	L_.str(%rip), %rdi
-	movl	$0, _b(%rip)
-	movl	_b(%rip), %esi
-	movl	%eax, -8(%rbp)          ## 4-byte Spill
-	movb	$0, %al
-	callq	_printf
-	movl	_b(%rip), %esi
-	cmpl	_c(%rip), %esi
-	movl	%eax, -12(%rbp)         ## 4-byte Spill
-	jne	LBB0_2
-## %bb.1:
-	leaq	L_.str.1(%rip), %rdi
-	movb	$0, %al
-	callq	_printf
-	movl	%eax, -16(%rbp)         ## 4-byte Spill
-LBB0_2:
-	movl	-4(%rbp), %eax
+	xorl	%ecx, %ecx
+	movl	%eax, -4(%rbp)          ## 4-byte Spill
+	movl	%ecx, %eax
 	addq	$16, %rsp
 	popq	%rbp
 	retq
@@ -55,12 +39,20 @@ _c:
 _b:
 	.long	2                       ## 0x2
 
+	.globl	_one                    ## @one
+	.p2align	2
+_one:
+	.long	1                       ## 0x1
+
+	.globl	_zero                   ## @zero
+.zerofill __DATA,__common,_zero,4,2
+	.globl	_str                    ## @str
+
 	.section	__TEXT,__cstring,cstring_literals
 L_.str:                                 ## @.str
-	.asciz	"%d\n"
+	.asciz	"%s\n"
 
-L_.str.1:                               ## @.str.1
-	.asciz	"a"
-
+_str:
+	.ascii	"23"
 
 .subsections_via_symbols

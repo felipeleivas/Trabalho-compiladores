@@ -397,17 +397,51 @@ fprintf(fout,"	.section	__TEXT,__text,regular,pure_instructions\n");
             case TAC_MULT: 
                 fprintf(fout, 
                     "##TAC_MULT\n"
-					"\t.comm _%s,4,4\n"
                     "\tmovl _%s(%%rip), %%eax\n"
                     "\timull _%s(%%rip), %%eax\n"
                     "\tmovl %%eax, _%s(%%rip)\n"
-                    , tac->res->value, tac->op1->value, tac->op2->value, tac->res->value);
+                    , tac->op1->value, tac->op2->value, tac->res->value);
                 break;
-            case TAC_AND: print("TAC_AND");
+            case TAC_AND:
+                fprintf(fout, 
+                    "##TAC_AND\n"
+                    "\tmovl _%s(%%rip), %%eax\n"
+                    "\timull _%s(%%rip), %%eax\n"
+                    "\tcmp $1, %%eax\n"
+                    "\tjne TrUE%d\n"
+                    "\tmovl $1, _%s(%%rip)\n"
+                    "\tjmp FAlSE%d\n"
+                    "TrUE%d:\n\tmovl $0, _%s(%%rip)\n"
+                    "FAlSE%d:\n "
+                    , tac->op1->value, tac->op2->value, j,tac->res->value,j ,j , tac->res->value, j);
+                j++;
                 break;
-            case TAC_OR: print("TAC_OR");
+            case TAC_OR: 
+                    fprintf(fout, 
+                    "##TAC_OR\n"
+                    "\tmovl _%s(%%rip), %%eax\n"
+                    "\taddl _%s(%%rip), %%eax\n"
+                    "\tcmp $1, %%eax\n"
+                    "\tjne TrUE%d\n"
+                    "\tmovl $1, _%s(%%rip)\n"
+                    "\tjmp FAlSE%d\n"
+                    "TrUE%d:\n\tmovl $0, _%s(%%rip)\n"
+                    "FAlSE%d:\n "
+                    , tac->op1->value, tac->op2->value, j,tac->res->value,j ,j , tac->res->value, j);
+                j++;
                 break;
-            case TAC_NOT: print("TAC_NOT");
+                break;
+            case TAC_NOT:
+                fprintf(fout,  
+                    "\tmovl _%s(%%rip), %%eax\n"
+                    "\tcmp $0, %%eax\n"
+                    "\tjne TrUE%d\n"
+                    "\tmovl $1, _%s(%%rip)\n"
+                    "\tjmp FAlSE%d\n"
+                    "TrUE%d:\n\tmovl $0, _%s(%%rip)\n"
+                    "FAlSE%d:\n "
+                    , tac->op1->value, j,tac->res->value,j ,j , tac->res->value, j);
+                j++;
                 break;
             case TAC_LE:            
                 fprintf(fout, 
@@ -574,19 +608,22 @@ fprintf(fout,"	.section	__TEXT,__text,regular,pure_instructions\n");
             case TAC_READ:
                 fprintf(fout, 
                     "##TAC_READ\n"
-                    "\tmovl $_%s, %%edi\n"
-                    "\tcall gets\n"
-                    "\tmovl $_%s, %%edi\n"
-                    "\tcall atoi\n"
-                    "\tmovl %%eax, _%s(%%rip)\n", 
-                    tac->res->value,
-                    tac->res->value,
+                    "\tsubq	$16, %%rsp\n"
+                    "\tmovq	_tempConvertStringToInt@GOTPCREL(%%rip), %%rdi\n"
+                    "\tmovb	$0, %%al\n"
+                    "\tcallq	_gets\n"
+                    "\tmovq	_tempConvertStringToInt@GOTPCREL(%%rip), %%rdi\n"
+                    "\tmovl	%%eax, -4(%%rbp)\n"
+                    "\tmovb	$0, %%al\n"
+                    "\tcallq	_atoi\n"
+                    "\tmovl	%%eax, _%s(%%rip)\n"
+                    "\txorl	%%esi, %%esi\n"
+                    "\tmovl	%%eax, -8(%%rbp)\n"
+                    "\tmovl	%%esi, %%eax\n"
+                    "\taddq	$16, %%rsp\n",
                     tac->res->value);
                 break;
             case TAC_VAR_VEC_DECL:
-                fprintf(fout, 
-					"##TAC_VAR_VEC_DECL\n"
-					"\t.comm _%s,%d,4\n", tac->res->value, atoi(tac->op1->value)*4);
                 break;
             case TAC_VECTOR_INIT:
                 fprintf(fout, 
@@ -640,7 +677,12 @@ fprintf(fout,"	.section	__TEXT,__text,regular,pure_instructions\n");
 					"\t.data\n"
 					"_%s:\n"
 					"\t.long \t%s\n", tac->res->value, tac->res->value, tac->op1->value);
-                break;  
+            break;
+            case TAC_VAR_VEC_DECL:
+                fprintf(fout, 
+					"##TAC_VAR_VEC_DECL\n"
+					"\t.comm _%s,%d,4\n", tac->res->value, atoi(tac->op1->value));
+            break;
             
         }        
     }
@@ -659,7 +701,10 @@ fprintf(fout,"	.section	__TEXT,__text,regular,pure_instructions\n");
             hashItem = hashItem->next;
         }
     }
-
+    fprintf(fout,
+        ".zerofill __DATA,__common,_zero,4,2\n"
+	"\t.comm	_tempConvertStringToInt,50,4\n"
+    );
     for(i = 0; strings[i]; i++){
             fprintf(fout,      ".LC%d:\n"
                 "\t.string %s\n"
