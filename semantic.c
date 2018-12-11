@@ -37,7 +37,7 @@ void setDeclaration(AST* root) {
 				break;
 
 
-
+			case AST_BEGIN_VEC_INITIALIZATION: break;
 			case AST_VARIABLE_DECLARATION_VECTOR:
 				if(isRedeclared(dec)){
 					handleRedeclared(dec);
@@ -46,7 +46,7 @@ void setDeclaration(AST* root) {
 				dec->dataType = findTypeByAstNode(dec->son[0]);
 				dec->symbol->dataType[0] = findTypeByAstNode(dec->son[0]);
 				if(dec->son[2]){
-					AST* arrayElement = dec->son[2];
+					AST* arrayElement = dec->son[2]->son[0];
 					for (; arrayElement ; arrayElement = arrayElement->son[1]){
 						if(arrayElement->son[0]->dataType != dec->dataType){
 							handleMissMatchingOfType(dec);

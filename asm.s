@@ -1,44 +1,4 @@
 	.section	__TEXT,__text,regular,pure_instructions
-##TAC_VECTOR_INIT
-	.globl 	_13
-	.data
-_13:
-##TAC_VECTOR_INIT
-	.globl 	_13
-	.data
-_13:
-##TAC_VECTOR_INIT
-	.globl 	_13
-	.data
-_13:
-##TAC_VECTOR_INIT
-	.globl 	_13
-	.data
-_13:
-##TAC_VECTOR_INIT
-	.globl 	_13
-	.data
-_13:
-##TAC_VECTOR_INIT
-	.globl 	_13
-	.data
-_13:
-##TAC_VECTOR_INIT
-	.globl 	_13
-	.data
-_13:
-##TAC_VECTOR_INIT
-	.globl 	_13
-	.data
-_13:
-##TAC_VECTOR_INIT
-	.globl 	_13
-	.data
-_13:
-##TAC_VECTOR_INIT
-	.globl 	_13
-	.data
-_13:
 ##TAC_BEGINFUN
 	.globl _main
 _main:
@@ -56,7 +16,7 @@ movl _Variable0(%rip), %eax
 movl %eax, _x(%rip)
 ##TAC_PRINT_EXPRESSION
 	leaq	.LC0(%rip), %rdi
-	movl	_x(%rip), %esi
+	movl	_Variable1(%rip), %esi
 	movb	$0, %al
 	callq	_printf
 ##TAC_PRINT_STRING
@@ -67,6 +27,26 @@ movl %eax, _x(%rip)
 	popq	 %rbp
 	retq 
 	.cfi_endproc
+##TAC_BEGINFUN
+	.globl _icila
+_icila:
+	.cfi_startproc
+	pushq	%rbp
+	movq	%rsp, %rbp
+##TAC_ADD
+	movl	_ici(%rip), %eax
+	addl	_1(%rip), %eax
+	movl	%eax, _Variable2(%rip)
+#TAC_ATRI
+movl _Variable2(%rip), %eax
+movl %eax, _ici(%rip)
+## TAC_RETURN
+	movl _ici(%rip), %eax
+	leave
+	ret 
+##TAC_ENDFUN
+	retq 
+	.cfi_endproc
 
 
 	.section	__DATA,__data
@@ -75,20 +55,18 @@ movl %eax, _x(%rip)
 	.data
 _x:
 	.long 	92
-##TAC_VAR_VEC_DECL
-	.comm _v,10,4
-##TAC_VAR_VEC_DECL
-	.comm _mat,10,4
 ##TAC_VAR_DECL
 	.globl 	_Variable0
 	.data
 _Variable0:
 	.long 	0
-##DECL_LITERAL
-	.globl 	_13
+##TAC_FUNCTION_PARAM
+	.comm _ici,4,4
+##TAC_VAR_DECL
+	.globl 	_Variable2
 	.data
-_13:
-	.long 	13
+_Variable2:
+	.long 	0
 ##DECL_LITERAL
 	.globl 	_92
 	.data
@@ -110,25 +88,10 @@ _1:
 _2:
 	.long 	2
 ##DECL_LITERAL
-	.globl 	_4
-	.data
-_4:
-	.long 	4
-##DECL_LITERAL
-	.globl 	_8
-	.data
-_8:
-	.long 	8
-##DECL_LITERAL
 	.globl 	_10
 	.data
 _10:
 	.long 	10
-##DECL_LITERAL
-	.globl 	_9
-	.data
-_9:
-	.long 	9
 ##DECL_LITERAL
 	.globl 	_20
 	.data

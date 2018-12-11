@@ -92,7 +92,7 @@ element: variablelDeclaration element { $$ = astCreate(AST_ELEMENT, 0,$1,$2,0,0)
 
 variablelDeclaration: type TK_IDENTIFIER '=' expression ';'                                 { $$ = astCreate(AST_VARIABLE_DECLARATION, $2,$1,$4,0,0);      }
                     | type TK_IDENTIFIER 'q' LIT_INTEGER 'p' ';'                            { $$ = astCreate(AST_VARIABLE_DECLARATION_VECTOR, $2,$1,astCreate(AST_LITERAL, $4,0,0,0,0),0,0);      }
-                    | type TK_IDENTIFIER 'q' LIT_INTEGER 'p' ':' arrayInitialization ';'    { $$ = astCreate(AST_VARIABLE_DECLARATION_VECTOR, $2,$1,astCreate(AST_LITERAL, $4,0,0,0,0),$7,0);      }
+                    | type TK_IDENTIFIER 'q' LIT_INTEGER 'p' ':' arrayInitialization ';'    { $$ = astCreate(AST_VARIABLE_DECLARATION_VECTOR, $2,$1,astCreate(AST_LITERAL, $4,0,0,0,0),astCreate(AST_BEGIN_VEC_INITIALIZATION, $2,$7,0,0,0),0);      }
                     ;
 
 arrayInitialization: literal arrayInitialization { $$ = astCreate(AST_VECTOR_INITIALIZATION, 0,$1,$2,0,0); }

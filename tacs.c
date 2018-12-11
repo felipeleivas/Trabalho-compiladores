@@ -106,6 +106,10 @@ void tacPrintSingle(TAC *tac){
             break;
         case TAC_IDENTIFIER: print("TAC_IDENTIFIER");
             break;
+        case TAC_BEGIN_VEC_INI: print("TAC_BEGIN_VEC_INI");
+            break;
+        case TAC_END_VEC_INI: print("TAC_END_VEC_INI");
+            break;
         default: print("TAC_UNKOWN");
     }
     if(tac->res) fprintf(stderr,",%s",tac->res->key); else print(",0"); 
@@ -238,7 +242,17 @@ TAC* tacGenerate(AST* node){
                 result[0]),
              result[2]);
         case AST_VECTOR_INITIALIZATION:
-            return tacJoin(result[1],tacCreate(TAC_VECTOR_INIT,result[0]?result[0]->res:0,0,0));
+            return tacJoin(tacCreate(TAC_VECTOR_INIT,result[0]?result[0]->res:0,0,0),result[1]);
+        case AST_BEGIN_VEC_INITIALIZATION:{
+            TAC* beginf = tacCreate(TAC_BEGIN_VEC_INI, node->son[0]->symbol, node->symbol, 0);
+                TAC* endf = tacCreate(TAC_END_VEC_INI, node->son[0]->symbol, 0, 0);
+
+                return tacJoin(
+                            tacJoin(
+                                beginf,
+                                result[0]),
+                        endf);
+        }
         case AST_ATTRIBUATION:
         case AST_ATTRIBUATION_VECTOR:
             return tacJoin(
@@ -274,7 +288,13 @@ TAC* tacGenerate(AST* node){
         case AST_READ:
             return tacJoin(result[0], tacCreate(returnTacSymbolBasedOnAstSymbol(node->type), node->symbol,0,0));
         case AST_VECTOR:
-            return tacJoin(result[0], tacCreate(TAC_VEC_READ,makeTemp2(),node->symbol,result[0]->res));
+            tempNode = makeTemp2();
+            return 
+                tacJoin(createTempDeclaration(tempNode), 
+                        tacJoin(result[0], 
+                                tacCreate(TAC_VEC_READ,tempNode,node->symbol,result[0]->res)
+                        )
+                    );
         case AST_TYPE_CHAR:
         case AST_TYPE_FLOAT:
         case AST_TYPE_INT:
@@ -520,7 +540,7 @@ fprintf(fout,"	.section	__TEXT,__text,regular,pure_instructions\n");
                 fprintf(fout, 
                     "## TAC_RETURN\n"
                     "\tmovl _%s(%%rip), %%eax\n" , tac->res->value);
-				if(strcmp(tacAux->res->value, "main"))
+				if(strcmp(tacAux->res->value, "main") == 0)
 					fprintf(fout, "\tpopq	 %%rbp\n");
 		
 				fprintf(fout,
@@ -539,15 +559,15 @@ fprintf(fout,"	.section	__TEXT,__text,regular,pure_instructions\n");
             case TAC_BEGINFUN:
                 fprintf(fout, 
 					"##TAC_BEGINFUN\n"
-					"\t.globl %s\n"
-					"%s:\n"
+					"\t.globl _%s\n"
+					"_%s:\n"
 					"\t.cfi_startproc\n"
 					"\tpushq	%%rbp\n"
 					"\tmovq	%%rsp, %%rbp\n", tac->res->value, tac->res->value);
                 break;
             case TAC_ENDFUN: 
                 fprintf(fout, "##TAC_ENDFUN\n");
-				if(strcmp(tac->res->value, "main"))
+				if(strcmp(tac->res->value, "main") == 0)
 					fprintf(fout, "\tpopq	 %%rbp\n");
 				fprintf(fout,
                     "\tretq \n"
@@ -582,9 +602,6 @@ fprintf(fout,"	.section	__TEXT,__text,regular,pure_instructions\n");
             case TAC_FUNC_HEAD: print("TAC_FUNC_HEAD");
                 break;
             case TAC_FUNCTION_PARAM:
-                fprintf(fout, 
-                    "##TAC_FUNCTION_PARAM\n"
-                    "\t.comm _%s,4,4\n", tac->res->value);
                 break;
             case TAC_PRINT:
                 if(tac->res->type == LIT_STRING){
@@ -626,32 +643,13 @@ fprintf(fout,"	.section	__TEXT,__text,regular,pure_instructions\n");
             case TAC_VAR_VEC_DECL:
                 break;
             case TAC_VECTOR_INIT:
-                fprintf(fout, 
-					"##TAC_VECTOR_INIT\n"
-					"\t.globl \t_%s\n"
-					"\t.data\n"
-					"_%s:\n", tac->res->value, tac->res->value);
-				tacAux = tac->next;
-                
-				while(tacAux->type == TAC_VECTOR_INIT)
-				{
-                    fprintf(fout, 
-                        "##TAC_VECTOR_INIT\n"
-                        "\t.globl \t_%s\n"
-                        "\t.data\n"
-                        "_%s:\n", tac->res->value, tac->res->value);
-					tacAux = tacAux->next;
-				}
-                tac = tacAux;
                 break;
             case TAC_VEC_READ:
                  fprintf(fout,
                     "## TAC_VEC_READ\n"
-					"\t.comm _%s,4,4\n"
-                    "\tmovl _%s(%%rip), %%eax \n"
-                    "\tmovl _%s(,%%eax,4), %%eax \n" //tem que ver esse 4 ali. teria que pegar o tipo da variável temporária
+                    "\tmovl _%s+%d(%%rip), %%eax \n"
                     "\tmovl %%eax, _%s(%%rip) \n"	
-                    ,tac->res->value,tac->op2->value,tac->op1->value,tac->res->value);
+                    ,tac->op1->value,4 * atoi(tac->op2->value),tac->res->value);
                 break;
             case TAC_TYPE_CHAR: //print("TAC_TYPE_CHAR");
                 break;
@@ -660,6 +658,9 @@ fprintf(fout,"	.section	__TEXT,__text,regular,pure_instructions\n");
             case TAC_TYPE_FLOAT: //print("TAC_TYPE_FLOAT");
                 break;
             case TAC_IDENTIFIER: //print("TAC_IDENTIFIER");
+                break;
+            case TAC_BEGIN_VEC_INI:
+            case TAC_END_VEC_INI:
                 break;
             default: print("TAC_UNKOWN");
         }
@@ -683,6 +684,28 @@ fprintf(fout,"	.section	__TEXT,__text,regular,pure_instructions\n");
 					"##TAC_VAR_VEC_DECL\n"
 					"\t.comm _%s,%d,4\n", tac->res->value, atoi(tac->op1->value));
             break;
+            case TAC_BEGIN_VEC_INI:
+                fprintf(fout,
+                "##TAC_BEGIN_VEC_INIT\n"
+                "_%s:\n",tac->op1->value
+                ); 
+                break;
+            case TAC_VECTOR_INIT:
+                fprintf(fout,
+                    "\t.long %s\n",tac->res->value
+                ); 
+                break;
+            case TAC_END_VEC_INI:
+                fprintf(fout,
+                "##TAC_END_VEC_INIT\n"
+                );
+                break;
+
+                case TAC_FUNCTION_PARAM:
+                fprintf(fout, 
+                    "##TAC_FUNCTION_PARAM\n"
+                    "\t.comm _%s,4,4\n", tac->res->value);
+                break;
             
         }        
     }

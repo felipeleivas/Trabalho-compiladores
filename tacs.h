@@ -42,6 +42,8 @@
 #define TAC_TYPE_INT 37
 #define TAC_TYPE_FLOAT 38
 #define TAC_IDENTIFIER 39
+#define TAC_BEGIN_VEC_INI 40
+#define TAC_END_VEC_INI 41
 
 typedef struct tac_struct{
     int type;

@@ -1,9 +1,11 @@
 int x = 92;
-int v q10p: 1 9 0 2 0 4 0 8 0 13; 
-int mat q10p; 
-
-int _maindb{
+int maindb{
     x = 20 / 10;
-    print x, " OI PRI\n";
+   
+    print icilad2b, " OI PRI\n";
 }
 
+int icila dint icib{
+    ici = ici + 1;
+    return ici;
+}
