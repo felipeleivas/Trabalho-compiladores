@@ -1,10 +1,10 @@
 int a;
-
+int ll = 23;
+int pri();
 int main(){
-    a = 1;
-    return a;
+    a =  pri() ;
+    printf("%d\n",pri());
 }
-int pri( int aasdasd){
-    a = 2;
-    return a;
+int pri(){
+    return ll;
 }

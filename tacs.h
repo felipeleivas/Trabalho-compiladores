@@ -2,7 +2,8 @@
 #define TACS_HEADER
 #include "hash.h"
 #include "ast.h"
-
+#include <stdio.h>
+#include <stdlib.h>
 
 #define TAC_UNKNOWN -1
 #define TAC_SYMBOL 1
@@ -44,6 +45,7 @@
 #define TAC_IDENTIFIER 39
 #define TAC_BEGIN_VEC_INI 40
 #define TAC_END_VEC_INI 41
+#define TAC_PARAMETER 42
 
 typedef struct tac_struct{
     int type;

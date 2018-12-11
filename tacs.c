@@ -1,4 +1,8 @@
 #include "tacs.h"
+   
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 extern HASH_TABLE *hashTable;
 
 TAC* makeIfThenElse(TAC* condition, TAC* ifBlock, TAC* elseBlock);
@@ -110,6 +114,8 @@ void tacPrintSingle(TAC *tac){
             break;
         case TAC_END_VEC_INI: print("TAC_END_VEC_INI");
             break;
+        case TAC_PARAMETER: print("TAC_PARAMETER");
+            break;
         default: print("TAC_UNKOWN");
     }
     if(tac->res) fprintf(stderr,",%s",tac->res->key); else print(",0"); 
@@ -171,11 +177,23 @@ int returnTacSymbolBasedOnAstSymbol(int astSymbol){
     }
 }
 
+int parameterCounter = 0;
+int calledFuncParameterCounter = 0;
+char lastFuncName[90];
+char lastCalledFunc[90];
 TAC* tacGenerate(AST* node){
     if(!node) return 0;
-
+    char buffer[50];
     TAC* result[MAX_SONS];
     int i;
+    if(node->type == AST_FUNCTION_HEAD){
+        strcpy(lastFuncName,node->symbol->value);
+        parameterCounter = 0;
+    }
+    if(node->type == AST_FUNCTION){
+        strcpy(lastCalledFunc,node->symbol->value);
+        calledFuncParameterCounter = 0;
+    }
     for(i=0; i< MAX_SONS; i++) 
     {
         result[i] = tacGenerate(node->son[i]);
@@ -220,21 +238,21 @@ TAC* tacGenerate(AST* node){
 
 
         case AST_FUNCTION_DECLARATION:{
-                TAC* beginf = tacCreate(TAC_BEGINFUN, node->son[0]->symbol, 0, 0);
-                TAC* endf = tacCreate(TAC_ENDFUN, node->son[0]->symbol, 0, 0);
-
-                return tacJoin(
+            TAC* beginf = tacCreate(TAC_BEGINFUN, node->son[0]->symbol, 0, 0);
+            TAC* endf = tacCreate(TAC_ENDFUN, node->son[0]->symbol, 0, 0);
+            return tacJoin(
+                        tacJoin(
                             tacJoin(
-                                tacJoin(
-                                    result[0],
-                                    beginf),
-                                result[1]),
-                        endf);
+                                beginf,
+                                result[0]),
+                            result[1]),
+                    endf);
         }
         case AST_FUNCTION_HEAD:
             return tacJoin(result[0], result[1]);
         case AST_FUNCTION_PARAM:
-            return tacJoin(tacCreate(TAC_FUNCTION_PARAM, node->symbol, 0 ,0),result[1]);
+            sprintf(buffer,"%s%d",lastFuncName,parameterCounter++);
+            return tacJoin(result[1],tacCreate(TAC_FUNCTION_PARAM, node->symbol, createItem(buffer,buffer,DATATYPE_INT) ,0));
         case AST_VARIABLE_DECLARATION:
         case AST_VARIABLE_DECLARATION_VECTOR:
             return tacJoin(tacJoin(
@@ -262,10 +280,17 @@ TAC* tacGenerate(AST* node){
                             result[0]?result[0]->res:0,result[1]?result[1]->res:0)
                         );   
         case AST_FUNCTION:
-            return tacJoin(result[0], tacCreate(TAC_CALL,makeTemp2(),node->symbol,0));                 
+            tempNode = makeTemp2();
+
+            return tacJoin(
+                    createTempDeclaration(tempNode),
+                    tacJoin(result[0],tacCreate(TAC_CALL,tempNode,node->symbol,0))
+                    
+                );                 
         
         case AST_PARAMETER:
-                return tacJoin(result[0],result[1]);
+            sprintf(buffer,"%s%d",lastCalledFunc,calledFuncParameterCounter++);
+                return tacJoin(tacCreate(TAC_ARG,result[0]?result[0]->res:0,createItem(buffer,buffer,DATATYPE_INT),0),result[1]);
 
         case AST_PRINT_STRING:
                 return tacJoin(  
@@ -381,6 +406,8 @@ void asmGen(TAC* first) {
 		strings[i] = 0;
 
 	i = 0;
+    // int parameterCounter = 0;
+
 fprintf(fout,"	.section	__TEXT,__text,regular,pure_instructions\n");
 // fprintf(stderr, "Começou:\n");
     for(tac = first; tac; tac=tac->next) {
@@ -535,17 +562,10 @@ fprintf(fout,"	.section	__TEXT,__text,regular,pure_instructions\n");
                     , tac->res->value);
                 break;
             case TAC_RET: 
-                for(tacAux = tac; tacAux->type != TAC_ENDFUN; tacAux = tacAux->next)
-					;
-                fprintf(fout, 
-                    "## TAC_RETURN\n"
-                    "\tmovl _%s(%%rip), %%eax\n" , tac->res->value);
-				if(strcmp(tacAux->res->value, "main") == 0)
-					fprintf(fout, "\tpopq	 %%rbp\n");
-		
-				fprintf(fout,
-					"\tleave\n"
-                   	"\tret \n"); 
+                    fprintf(fout,
+                    "##TAC_RETURN\n"
+                    "\tmovl	_%s(%%rip), %%eax\n",tac->res->value
+                    );
                 break;
             case TAC_ATRI: 
                 fprintf(fout,
@@ -554,7 +574,7 @@ fprintf(fout,"	.section	__TEXT,__text,regular,pure_instructions\n");
                     "movl %%eax, _%s(%%rip)\n",tac->op1->key, tac->res->key
                 );
                 break;
-            case TAC_ARG: print("TAC_ARG");
+            case TAC_ARG: 
                 break;
             case TAC_BEGINFUN:
                 fprintf(fout, 
@@ -567,8 +587,7 @@ fprintf(fout,"	.section	__TEXT,__text,regular,pure_instructions\n");
                 break;
             case TAC_ENDFUN: 
                 fprintf(fout, "##TAC_ENDFUN\n");
-				if(strcmp(tac->res->value, "main") == 0)
-					fprintf(fout, "\tpopq	 %%rbp\n");
+                fprintf(fout, "\tpopq	 %%rbp\n");
 				fprintf(fout,
                     "\tretq \n"
 					"\t.cfi_endproc\n");
@@ -593,7 +612,10 @@ fprintf(fout,"	.section	__TEXT,__text,regular,pure_instructions\n");
                     "##TAC_JUMP\n"
                     "\tjmp %s", tac->res->value);
                 break;  
-            case TAC_CALL: print("TAC_CALL");
+            case TAC_CALL: fprintf(fout,
+                        "\tcallq _%s\n"
+                        "\tmovl %%eax, _%s(%%rip)\n", tac->op1->value,tac->res->value
+                );
                 break;
             case TAC_ATRI_VEC: print("TAC_ATRI_VEC");
                 break;
@@ -602,6 +624,12 @@ fprintf(fout,"	.section	__TEXT,__text,regular,pure_instructions\n");
             case TAC_FUNC_HEAD: print("TAC_FUNC_HEAD");
                 break;
             case TAC_FUNCTION_PARAM:
+                 fprintf(fout,
+                    "##TAC_FUNCTION_PARAM\n"
+                    "\tmovl _%s(%%rip), %%eax\n"
+                    "\tmovl %%eax, _%s(%%rip)\n",tac->op1->value,tac->res->value
+                    );
+                    
                 break;
             case TAC_PRINT:
                 if(tac->res->type == LIT_STRING){
@@ -704,9 +732,23 @@ fprintf(fout,"	.section	__TEXT,__text,regular,pure_instructions\n");
                 case TAC_FUNCTION_PARAM:
                 fprintf(fout, 
                     "##TAC_FUNCTION_PARAM\n"
-                    "\t.comm _%s,4,4\n", tac->res->value);
+                    "\t.comm _%s,4,4\n"
+                    "\t.comm _%s,4,4\n", tac->res->value ,tac->op1->value);
                 break;
-            
+                
+        }        
+    }
+    
+    for(tac = first; tac; tac=tac->next) {
+                    // fprintf(stderr, "tac->type = %d\n", tac->type);
+        switch(tac->type) {
+            case TAC_ARG:
+                fprintf(fout, 
+                    "##TAC_ARG\n"
+                    "_%s:\n"
+                    "\t.long %s\n", tac->op1->value ,tac->res->value);
+                break;
+                
         }        
     }
 

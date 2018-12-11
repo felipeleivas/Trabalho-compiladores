@@ -1,11 +1,18 @@
 int x = 92;
+int a = 21;
 int maindb{
-    x = 20 / 10;
-   
-    print icilad2b, " OI PRI\n";
+    
+    x = a;
+    print "\n";
+    print aad123,423b, " OI PRI\n";
 }
 
-int icila dint icib{
-    ici = ici + 1;
-    return ici;
+int aaasaala dint tr, int treb{
+    tr = tre + 1;
+    return tr;
+}
+
+int aadint k, int ateb{
+ print k+1, "Aqiou";
+ return k*ate;
 }
